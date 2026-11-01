@@ -2,12 +2,9 @@
 
 #include <string>
 
-#include "constants.hpp"
-
 namespace CurrentCfw {
 
-    CFW getCFW();
+    // "major.minor.micro|E" (emuMMC) or "|S" (sysMMC) of the running Atmosphère
     std::string getAmsInfo();
-    extern CFW running_cfw;
 
 }  // namespace CurrentCfw

@@ -5,7 +5,6 @@
 #include <json.hpp>
 
 #include "constants.hpp"
-#include "current_cfw.hpp"
 #include "fs.hpp"
 #include "main_frame.hpp"
 #include "warning_page.hpp"
@@ -14,8 +13,6 @@ namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
 //TimeServiceType __nx_time_service_type = TimeServiceType_System;
-
-CFW CurrentCfw::running_cfw;
 
 int main(int argc, char* argv[])
 {
@@ -47,8 +44,6 @@ int main(int argc, char* argv[])
     pminfoInitialize();
     splInitialize();
     romfsInit();
-
-    CurrentCfw::running_cfw = CurrentCfw::getCFW();
 
     fs::createTree(CONFIG_PATH);
 

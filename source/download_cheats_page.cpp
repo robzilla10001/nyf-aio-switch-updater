@@ -4,7 +4,6 @@
 #include <fstream>
 
 #include "constants.hpp"
-#include "current_cfw.hpp"
 #include "download.hpp"
 #include "extract.hpp"
 #include "fs.hpp"
@@ -116,7 +115,7 @@ DownloadCheatsPage::DownloadCheatsPage(uint64_t tid, const std::string& name) : 
 
 void DownloadCheatsPage::GetBuildID()
 {
-    if (util::isApplet() && CurrentCfw::running_cfw == CFW::ams)
+    if (util::isApplet())
         this->GetBuildIDFromDmnt();
     if (this->bid == "")
         this->GetBuildIDFromFile();

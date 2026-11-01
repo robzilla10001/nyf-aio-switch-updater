@@ -1,6 +1,5 @@
 #include "payload_page.hpp"
 
-#include "current_cfw.hpp"
 #include "fs.hpp"
 #include "utils.hpp"
 
@@ -26,9 +25,7 @@ PayloadPage::PayloadPage() : AppletFrame(true, true)
             util::rebootToPayload(payload_path);
             brls::Application::popView();
         });
-        if (CurrentCfw::running_cfw == CFW::ams) {
-            this->RegisterCopyAction(brls::Key::X, payload_path, REBOOT_PAYLOAD_PATH, "menus/payloads/set_reboot_payload"_i18n);
-        }
+        this->RegisterCopyAction(brls::Key::X, payload_path, REBOOT_PAYLOAD_PATH, "menus/payloads/set_reboot_payload"_i18n);
         this->RegisterCopyAction(brls::Key::Y, payload_path, UPDATE_BIN_PATH, "menus/payloads/set_update_bin"_i18n);
         this->list->addView(this->listItem);
     }

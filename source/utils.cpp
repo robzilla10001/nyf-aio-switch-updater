@@ -7,7 +7,6 @@
 #include <fstream>
 #include <thread>
 
-#include "current_cfw.hpp"
 #include "download.hpp"
 #include "extract.hpp"
 #include "fs.hpp"
@@ -162,7 +161,7 @@ namespace util {
             case contentType::cheats: {
                 std::vector<std::string> titles = extract::getInstalledTitlesNs();
                 titles = extract::excludeTitles(CHEATS_EXCLUDE, titles);
-                extract::extractCheats(CHEATS_FILENAME, titles, CurrentCfw::running_cfw, version);
+                extract::extractCheats(CHEATS_FILENAME, titles, version);
                 break;
             }
             case contentType::fw:
@@ -222,10 +221,8 @@ namespace util {
         payloadPaths.push_back(ROOT_PATH);
         if (std::filesystem::exists(PAYLOAD_PATH)) payloadPaths.push_back(PAYLOAD_PATH);
         if (std::filesystem::exists(AMS_PATH)) payloadPaths.push_back(AMS_PATH);
-        if (std::filesystem::exists(REINX_PATH)) payloadPaths.push_back(REINX_PATH);
         if (std::filesystem::exists(BOOTLOADER_PATH)) payloadPaths.push_back(BOOTLOADER_PATH);
         if (std::filesystem::exists(BOOTLOADER_PL_PATH)) payloadPaths.push_back(BOOTLOADER_PL_PATH);
-        if (std::filesystem::exists(SXOS_PATH)) payloadPaths.push_back(SXOS_PATH);
         if (std::filesystem::exists(ROMFS_PATH)) payloadPaths.push_back(ROMFS_PATH);
         std::vector<std::string> res;
         for (const auto& path : payloadPaths) {
@@ -247,7 +244,7 @@ namespace util {
 
     void rebootToPayload(const std::string& path)
     {
-        reboot_to_payload(path.c_str(), CurrentCfw::running_cfw != CFW::ams);
+        reboot_to_payload(path.c_str());
     }
 
     std::string getLatestTag(const std::string& releasesUrl)
@@ -397,19 +394,7 @@ namespace util {
 
     std::string getContentsPath()
     {
-        std::string path;
-        switch (CurrentCfw::running_cfw) {
-            case CFW::ams:
-                path = std::string(AMS_PATH) + std::string(CONTENTS_PATH);
-                break;
-            case CFW::rnx:
-                path = std::string(REINX_PATH) + std::string(CONTENTS_PATH);
-                break;
-            case CFW::sxos:
-                path = std::string(SXOS_PATH) + std::string(TITLES_PATH);
-                break;
-        }
-        return path;
+        return std::string(AMS_PATH) + std::string(CONTENTS_PATH);
     }
 
     bool getBoolValue(const nlohmann::ordered_json& jsonFile, const std::string& key)

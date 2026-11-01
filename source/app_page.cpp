@@ -7,7 +7,6 @@
 #include <regex>
 
 #include "confirm_page.hpp"
-#include "current_cfw.hpp"
 #include "download.hpp"
 #include "download_cheats_page.hpp"
 #include "extract.hpp"
@@ -78,18 +77,7 @@ void AppPage::PopulatePage()
 void AppPage::CreateDownloadAllButton()
 {
     std::string text("menus/cheats/downloading"_i18n);
-    std::string url = "";
-    switch (CurrentCfw::running_cfw) {
-        case CFW::ams:
-            url += CHEATS_URL_CONTENTS;
-            break;
-        case CFW::rnx:
-            url += CHEATS_URL_CONTENTS;
-            break;
-        case CFW::sxos:
-            url += CHEATS_URL_CONTENTS;
-            break;
-    }
+    std::string url = CHEATS_URL_CONTENTS;
     text += url;
     download = new brls::ListItem("menus/cheats/dl_latest"_i18n);
     download->getClickEvent()->subscribe([url, text](brls::View* view) {

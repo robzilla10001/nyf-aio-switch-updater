@@ -3,7 +3,6 @@
 #include "app_page.hpp"
 #include "confirm_page.hpp"
 #include "constants.hpp"
-#include "current_cfw.hpp"
 #include "download.hpp"
 #include "exclude_page.hpp"
 #include "extract.hpp"
@@ -57,7 +56,7 @@ CheatsPage::CheatsPage() : AppletFrame(true, true)
     if (cheatsVer != "") {
         item = new brls::ListItem("menus/cheats/dl_all"_i18n);
         item->getClickEvent()->subscribe([cheatsVer](brls::View* view) {
-            std::string url = CurrentCfw::running_cfw == CFW::sxos ? CHEATS_URL_TITLES : CHEATS_URL_CONTENTS;
+            std::string url = CHEATS_URL_CONTENTS;
             std::string text(fmt::format("menus/main/get_cheats"_i18n, cheatsVer) + "menus/common/from"_i18n + url);
             brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
             stagedFrame->setTitle("menus/cheats/dl_all"_i18n);
@@ -68,7 +67,7 @@ CheatsPage::CheatsPage() : AppletFrame(true, true)
                     new WorkerPage(stagedFrame, "menus/common/downloading"_i18n, [url]() { util::downloadArchive(url, contentType::cheats); }));
             }
             stagedFrame->addStage(
-                new WorkerPage(stagedFrame, "menus/common/extracting"_i18n, [cheatsVer]() { extract::extractAllCheats(CHEATS_FILENAME, CurrentCfw::running_cfw, cheatsVer); }));
+                new WorkerPage(stagedFrame, "menus/common/extracting"_i18n, [cheatsVer]() { extract::extractAllCheats(CHEATS_FILENAME, cheatsVer); }));
             stagedFrame->addStage(
                 new ConfirmPage_Done(stagedFrame, "menus/common/all_done"_i18n));
             brls::Application::pushView(stagedFrame);

@@ -15,7 +15,6 @@
 #include <thread>
 #include <vector>
 
-#include "current_cfw.hpp"
 #include "download.hpp"
 #include "fs.hpp"
 #include "main_frame.hpp"
@@ -128,7 +127,7 @@ namespace extract {
                         extractEntry(filename, zfile);
                         if (filename.substr(0, 14) == "/hekate_ctcaer") {
                             fs::copyFile(filename, UPDATE_BIN_PATH);
-                            if (CurrentCfw::running_cfw == CFW::ams && util::showDialogBoxBlocking(fmt::format("menus/utils/set_hekate_reboot_payload"_i18n, UPDATE_BIN_PATH, REBOOT_PAYLOAD_PATH), "menus/common/yes"_i18n, "menus/common/no"_i18n) == 0) {
+                            if (util::showDialogBoxBlocking(fmt::format("menus/utils/set_hekate_reboot_payload"_i18n, UPDATE_BIN_PATH, REBOOT_PAYLOAD_PATH), "menus/common/yes"_i18n, "menus/common/no"_i18n) == 0) {
                                 fs::copyFile(UPDATE_BIN_PATH, REBOOT_PAYLOAD_PATH);
                             }
                         }
@@ -207,32 +206,15 @@ namespace extract {
         return diff;
     }
 
-    int computeOffset(CFW cfw)
+    int computeOffset()
     {
-        switch (cfw) {
-            case CFW::ams:
-                std::filesystem::create_directory(AMS_PATH);
-                std::filesystem::create_directory(AMS_CONTENTS);
-                chdir(AMS_PATH);
-                return std::string(CONTENTS_PATH).length();
-                break;
-            case CFW::rnx:
-                std::filesystem::create_directory(REINX_PATH);
-                std::filesystem::create_directory(REINX_CONTENTS);
-                chdir(REINX_PATH);
-                return std::string(CONTENTS_PATH).length();
-                break;
-            case CFW::sxos:
-                std::filesystem::create_directory(SXOS_PATH);
-                std::filesystem::create_directory(SXOS_TITLES);
-                chdir(SXOS_PATH);
-                return std::string(TITLES_PATH).length();
-                break;
-        }
-        return 0;
+        std::filesystem::create_directory(AMS_PATH);
+        std::filesystem::create_directory(AMS_CONTENTS);
+        chdir(AMS_PATH);
+        return std::string(CONTENTS_PATH).length();
     }
 
-    void extractCheats(const std::string& archivePath, const std::vector<std::string>& titles, CFW cfw, const std::string& version, bool extractAll)
+    void extractCheats(const std::string& archivePath, const std::vector<std::string>& titles, const std::string& version, bool extractAll)
     {
         ensureAvailableStorage(archivePath);
 
@@ -243,7 +225,7 @@ namespace extract {
         ProgressEvent::instance().setTotalSteps(gi.number_entry);
         ProgressEvent::instance().setStep(0);
 
-        int offset = computeOffset(cfw);
+        int offset = computeOffset();
 
         for (uLong i = 0; i < gi.number_entry; ++i) {
             char szFilename[0x301] = "";
@@ -280,9 +262,9 @@ namespace extract {
         ProgressEvent::instance().setStep(ProgressEvent::instance().getMax());
     }
 
-    void extractAllCheats(const std::string& archivePath, CFW cfw, const std::string& version)
+    void extractAllCheats(const std::string& archivePath, const std::string& version)
     {
-        extractCheats(archivePath, {}, cfw, version, true);
+        extractCheats(archivePath, {}, version, true);
     }
 
     bool isBID(const std::string& bid)

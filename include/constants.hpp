@@ -33,7 +33,6 @@ constexpr const char CFW_URL[] = "https://raw.githubusercontent.com/HamletDuFrom
 constexpr const char BOOTLOADER_FILENAME[] = "/config/nyf-aio-switch-updater/bootloader.zip";
 
 constexpr const char AMS_URL[] = "https://raw.githubusercontent.com/HamletDuFromage/nx-links/master/cfws.json";
-constexpr const char SXOS_URL[] = "https://raw.githubusercontent.com/HamletDuFromage/nx-links/master/sxos.json";
 constexpr const char AMS_FILENAME[] = "/config/nyf-aio-switch-updater/ams.zip";
 
 constexpr const char HEKATE_URL[] = "https://raw.githubusercontent.com/HamletDuFromage/nx-links/master/hekate.json";
@@ -46,9 +45,7 @@ constexpr const char DEEPSEA_PACKAGE_PATH[] = "/config/deepsea/customPackage.jso
 
 constexpr const char CUSTOM_PACKS_PATH[] = "/config/nyf-aio-switch-updater/custom_packs.json";
 
-constexpr const char CHEATS_URL_TITLES[] = "https://github.com/HamletDuFromage/switch-cheats-db/releases/latest/download/titles.zip";
 constexpr const char CHEATS_URL_CONTENTS[] = "https://github.com/HamletDuFromage/switch-cheats-db/releases/latest/download/contents.zip";
-constexpr const char GFX_CHEATS_URL_TITLES[] = "https://github.com/HamletDuFromage/switch-cheats-db/releases/latest/download/titles_60fps-res-gfx.zip";
 constexpr const char GFX_CHEATS_URL_CONTENTS[] = "https://github.com/HamletDuFromage/switch-cheats-db/releases/latest/download/contents_60fps-res-gfx.zip";
 constexpr const char CHEATS_URL_VERSION[] = "https://github.com/HamletDuFromage/switch-cheats-db/releases/latest/download/VERSION";
 constexpr const char LOOKUP_TABLE_URL[] = "https://raw.githubusercontent.com/HamletDuFromage/switch-cheats-db/master/versions.json";
@@ -67,13 +64,8 @@ constexpr const char INTERNET_JSON[] = "/config/nyf-aio-switch-updater/internet.
 constexpr const char UPDATED_TITLES_PATH[] = "/config/nyf-aio-switch-updater/updated.dat";
 constexpr const char CHEATS_VERSION[] = "/config/nyf-aio-switch-updater/cheats_version.dat";
 constexpr const char AMS_CONTENTS[] = "/atmosphere/contents/";
-constexpr const char REINX_CONTENTS[] = "/ReiNX/contents/";
-constexpr const char SXOS_TITLES[] = "/sxos/titles/";
 constexpr const char AMS_PATH[] = "/atmosphere/";
-constexpr const char SXOS_PATH[] = "/sxos/";
-constexpr const char REINX_PATH[] = "/ReiNX/";
 constexpr const char CONTENTS_PATH[] = "contents/";
-constexpr const char TITLES_PATH[] = "titles/";
 
 constexpr const char COLOR_PICKER_URL[] = "https://git.io/jcpicker";
 constexpr const char JC_COLOR_URL[] = "https://raw.githubusercontent.com/HamletDuFromage/aio-switch-updater/master/jc_profiles.json";
@@ -123,10 +115,3 @@ enum class contentType
 };
 
 constexpr std::string_view contentTypeNames[8]{"custom", "cheats", "firmwares", "app", "bootloaders", "cfws", "payloads", "hekate_ipl"};
-
-enum class CFW
-{
-    rnx,
-    sxos,
-    ams,
-};

@@ -6,7 +6,6 @@
 
 #include "app_page.hpp"
 #include "confirm_page.hpp"
-#include "current_cfw.hpp"
 #include "dialogue_page.hpp"
 #include "download.hpp"
 #include "extract.hpp"
@@ -51,8 +50,8 @@ void ListDownloadTab::createList(contentType type)
 {
     std::vector<std::pair<std::string, std::string>> links;
     if (type == contentType::cheats && this->newCheatsVer != "") {
-        links.push_back(std::make_pair(fmt::format("menus/main/get_cheats"_i18n, this->newCheatsVer), CurrentCfw::running_cfw == CFW::sxos ? CHEATS_URL_TITLES : CHEATS_URL_CONTENTS));
-        links.push_back(std::make_pair("menus/main/get_cheats_gfx"_i18n, CurrentCfw::running_cfw == CFW::sxos ? GFX_CHEATS_URL_TITLES : GFX_CHEATS_URL_CONTENTS));
+        links.push_back(std::make_pair(fmt::format("menus/main/get_cheats"_i18n, this->newCheatsVer), CHEATS_URL_CONTENTS));
+        links.push_back(std::make_pair("menus/main/get_cheats_gfx"_i18n, GFX_CHEATS_URL_CONTENTS));
     }
     else
         links = download::getLinksFromJson(util::getValueFromKey(this->nxlinks, contentTypeNames[(int)type].data()));
