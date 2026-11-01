@@ -213,6 +213,9 @@ $(OUTPUT).nso	:	$(OUTPUT).elf
 
 endif
 
+# repackage the nro when anything in romfs (language file, assets, ...) changed
+$(OUTPUT).nro	:	$(shell find $(TOPDIR)/$(ROMFS) -type f)
+
 $(OUTPUT).elf	:	$(OFILES)
 
 $(OFILES_SRC)	: $(HFILES_BIN)
