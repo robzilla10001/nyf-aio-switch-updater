@@ -4,9 +4,9 @@
 #include <switch.h>
 
 #define PATH        "/switch/aio-switch-updater/"
-#define FULL_PATH   "/switch/aio-switch-updater/aio-switch-updater.nro"
-#define CONFIG_PATH "/config/aio-switch-updater/switch/aio-switch-updater/aio-switch-updater.nro"
-#define PREFIX      "/switch/aio-switch-updater/aio-switch-updater-v"
+#define FULL_PATH   "/switch/aio-switch-updater/nyf-aio-switch-updater.nro"
+#define CONFIG_PATH "/config/aio-switch-updater/switch/aio-switch-updater/nyf-aio-switch-updater.nro"
+#define PREFIX      "/switch/aio-switch-updater/nyf-aio-switch-updater-v"
 #define FORWARDER_PATH      "/config/aio-switch-updater/aiosu-forwarder.nro"
 #define CONFIG_SWITCH       "/config/aio-switch-updater/switch/"
 #define HIDDEN_FILE "/config/aio-switch-updater/.aio-switch-updater"
