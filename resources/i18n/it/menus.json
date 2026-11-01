@@ -32,7 +32,7 @@
     "kb_error": "Se la tastiera non appare, prova ad avviare l'app con pieno accesso alla RAM (come applicazione).",
     "cheatslips_see_more": "Altro",
     "cheatslips_dl_cheats": "Scarica cheat e torna indietro",
-    "bid_not_found": "Impossibile ottenere l'ID della build. Prova ad avviare AIO-Switch-Updater in Modalità Applet mentre il gioco è in esecuzione.",
+    "bid_not_found": "Impossibile ottenere l'ID della build. Prova ad avviare NYF-AIO-Switch-Updater in Modalità Applet mentre il gioco è in esecuzione.",
     "exclude_titles": "Escludi titoli",
     "exclude_titles_desc": "Con questo menu puoi disattivare l'aggiornamento dei cheat per i singoli titoli",
     "exclude_titles_save": "Salva ed esci",
@@ -40,7 +40,7 @@
     "bid_tid_info": "Questi cheat verranno aggiunti al termine del file di cheat presente sul tuo sistema.\n\u25c6 ID della build: {}",
     "dl_cheatcodes": "Scarica cheat",
     "dl_successful": "Il seguente cheat è stato scaricato correttamente:\n{}",
-    "applet_mode_not_supported": "A causa di limitazioni di memoria, nella Modalità Applet puoi ottenere i cheat soltanto per il gioco che stai attualmente giocando. Lancia AIO-Switch-Updater come applicazione per ottenere i cheat per tutti i giochi che possiedi.",
+    "applet_mode_not_supported": "A causa di limitazioni di memoria, nella Modalità Applet puoi ottenere i cheat soltanto per il gioco che stai attualmente giocando. Lancia NYF-AIO-Switch-Updater come applicazione per ottenere i cheat per tutti i giochi che possiedi.",
     "cheatfile_label": "Questi sono i cheat presenti nel file {}",
     "not_found": "Non sono stati trovati cheat validi per questo gioco",
     "show_existing": "Mostra esistenti",
@@ -70,7 +70,7 @@
     "cancel": "Annulla",
     "off": "Off",
     "selected": "Selezionato",
-    "applet_mode_not_supported": "Questa funzionalità non è disponibile in Modalità Applet. Per poterne usufruire, avvia AIO-Switch-Updater come applicazione.",
+    "applet_mode_not_supported": "Questa funzionalità non è disponibile in Modalità Applet. Per poterne usufruire, avvia NYF-AIO-Switch-Updater come applicazione.",
     "nothing_to_see": "Qui non c'è nulla!"
   },
   "changelog": {
@@ -96,7 +96,7 @@
   "pro_con": {
     "title": "Cambia il colore del Pro Controller",
     "desc": "Qui puoi cambiare il colore riportato dal tuo Pro Controller. Assicurati che sia assegnato al giocatore 1.",
-    "warning": "Attualmente AIO-Switch-Updater non permette di modificare il colore dell'impugnatura del Pro Controller. Usa Joy-Con Toolkit sul tuo PC per farlo.",
+    "warning": "Attualmente NYF-AIO-Switch-Updater non permette di modificare il colore dell'impugnatura del Pro Controller. Usa Joy-Con Toolkit sul tuo PC per farlo.",
     "label": "Cambia il colore del Pro Controller",
     "backing_up": "Salvataggio del profilo corrente in corso...",
     "all_done": "Finito! Potrebbe essere necessario spegnere e riaccendere il controller perché i cambiamenti abbiano effetto.",
@@ -184,7 +184,7 @@
     "cant_fetch_deepsea": "Impossibile ottenere i pacchetti. Apri una segnalazione su GitHub se il problema persiste.",
     "build_your_deepsea": "Personalizza il tuo pacchetto DeepSea selezionando i moduli da installare",
     "getting_ams": "Ottenendo Atmosphère",
-    "custom_packs_label": "\u25c6 Questi pacchetti sono elencati nel file {}. Questi pacchetti non sono promossi da AIO-Switch-Updater, perciò assicurati che provengano da fonti fidate."
+    "custom_packs_label": "\u25c6 Questi pacchetti sono elencati nel file {}. Questi pacchetti non sono promossi da NYF-AIO-Switch-Updater, perciò assicurati che provengano da fonti fidate."
   },
   "firmware": {
     "launch_daybreak": "Vuoi avviare Daybreak per l'installazione dell'aggiornamento del firmware appena scaricato?"

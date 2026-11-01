@@ -5,11 +5,11 @@
 
 #define PATH        "/switch/nyf-aio-switch-updater/"
 #define FULL_PATH   "/switch/nyf-aio-switch-updater/nyf-aio-switch-updater.nro"
-#define CONFIG_PATH "/config/aio-switch-updater/switch/nyf-aio-switch-updater/nyf-aio-switch-updater.nro"
+#define CONFIG_PATH "/config/nyf-aio-switch-updater/switch/nyf-aio-switch-updater/nyf-aio-switch-updater.nro"
 #define PREFIX      "/switch/nyf-aio-switch-updater/nyf-aio-switch-updater-v"
-#define FORWARDER_PATH      "/config/aio-switch-updater/aiosu-forwarder.nro"
-#define CONFIG_SWITCH       "/config/aio-switch-updater/switch/"
-#define HIDDEN_FILE "/config/aio-switch-updater/.aio-switch-updater"
+#define FORWARDER_PATH      "/config/nyf-aio-switch-updater/aiosu-forwarder.nro"
+#define CONFIG_SWITCH       "/config/nyf-aio-switch-updater/switch/"
+#define HIDDEN_FILE "/config/nyf-aio-switch-updater/.nyf-aio-switch-updater"
 
 int removeDir(const char* path)
 {

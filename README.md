@@ -17,15 +17,15 @@ Copy the `nyf-aio-switch-updater/` directory to `/switch/` on your sdcard.
 
 ## Features
 ### ⬦ Update CFW
-- Update the Atmosphère Switch Custom Firmware. AIO-Switch-Updater uses a custom RCM payload to finalise the install as it can't be performed while HOS is running.
-  - If you would like to preserve additional files or directories, write their path (one line each) in `/config/aio-switch-updater/preserve.txt` and they won't be overwritten when updating.
-  - Place [this file](https://github.com/robzilla10001/nyf-aio-switch-updater/blob/master/copy_files.txt) in `/config/aio-switch-updater/copy_files.txt` in order to have specific copy operations performed after each download. This is mainly meant for users with trinkets who want payloads automatically copied to a directory.
+- Update the Atmosphère Switch Custom Firmware. NYF-AIO-Switch-Updater uses a custom RCM payload to finalise the install as it can't be performed while HOS is running.
+  - If you would like to preserve additional files or directories, write their path (one line each) in `/config/nyf-aio-switch-updater/preserve.txt` and they won't be overwritten when updating.
+  - Place [this file](https://github.com/robzilla10001/nyf-aio-switch-updater/blob/master/copy_files.txt) in `/config/nyf-aio-switch-updater/copy_files.txt` in order to have specific copy operations performed after each download. This is mainly meant for users with trinkets who want payloads automatically copied to a directory.
 
 ### ⬦ Update Hekate/Payload
 - Download and update Hekate, as well as a selection of RCM payloads
 
 ### ⬦ Custom Downloads
-- A custom Atmosphère url can be entered in [this file](https://github.com/robzilla10001/nyf-aio-switch-updater/blob/master/custom_packs.json). Once moved to `/config/aio-switch-updater/custom_packs.json`, it will show on the `Custom Download` menu. This can be used to support third-party packs through AIO-Switch-Updater. Packs whose name starts by `[PACK]` won't prompt for a Hekate download.
+- A custom Atmosphère url can be entered in [this file](https://github.com/robzilla10001/nyf-aio-switch-updater/blob/master/custom_packs.json). Once moved to `/config/nyf-aio-switch-updater/custom_packs.json`, it will show on the `Custom Download` menu. This can be used to support third-party packs through NYF-AIO-Switch-Updater. Packs whose name starts by `[PACK]` won't prompt for a Hekate download.
 - Non-Atmosphère downloads can also be added in the `misc` category.
 
 ### ⬦ Download firmwares
@@ -39,12 +39,12 @@ Copy the `nyf-aio-switch-updater/` directory to `/switch/` on your sdcard.
 ## Extras (in the `Tools` tab)
 - Reboot to specific payload.
 - Consult games with missing updates.
-- Change software color scheme of Joy-Cons. Additional color profiles can be found in the releases and should be copied to `config/aio-switch-updater/jc_profiles.json`. Use [this webpage](https://hamletdufromage.github.io/JC-color-picker/JCpicker.html) to generate your own profiles.
-- Change software color scheme of Pro Controllers (has to be paired as Player 1). Additional color profiles can be found in the releases and should be copied to `config/aio-switch-updater/pc_profiles.json`.
+- Change software color scheme of Joy-Cons. Additional color profiles can be found in the releases and should be copied to `config/nyf-aio-switch-updater/jc_profiles.json`. Use [this webpage](https://hamletdufromage.github.io/JC-color-picker/JCpicker.html) to generate your own profiles.
+- Change software color scheme of Pro Controllers (has to be paired as Player 1). Additional color profiles can be found in the releases and should be copied to `config/nyf-aio-switch-updater/pc_profiles.json`.
 - Consult installed cheat codes.
 - Launch the Switch's web browser.
-- Edit internet settings (DNS, IP address, MTU, etc). Add you own configs to `config/aio-switch-updater/internet.json`. You can find a template in the root of the repo.
-- Tabs can be hidden through the `Hide tabs` menu, and more entries can be hidden by manually editing [`config/aio-switch-updater/hide_tabs.json`](https://github.com/robzilla10001/nyf-aio-switch-updater/blob/master/hide_tabs.json).
+- Edit internet settings (DNS, IP address, MTU, etc). Add you own configs to `config/nyf-aio-switch-updater/internet.json`. You can find a template in the root of the repo.
+- Tabs can be hidden through the `Hide tabs` menu, and more entries can be hidden by manually editing [`config/nyf-aio-switch-updater/hide_tabs.json`](https://github.com/robzilla10001/nyf-aio-switch-updater/blob/master/hide_tabs.json).
 
 ## Screenshots
 <details><summary>Expand to view the screenshots</summary>

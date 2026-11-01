@@ -31,7 +31,7 @@
     "kb_error": "キーボードが表示されない場合は、フルRAMアクセス(タイトルリダイレクト)でアプリを実行してみてください",
     "cheatslips_see_more": "続きを見る",
     "cheatslips_dl_cheats": "チートをダウンロードして戻る",
-    "bid_not_found": "ビルドIDを取得できませんでした。ゲームの実行中にアプレットモードでAIO-Switch-Updaterを起動してみてください",
+    "bid_not_found": "ビルドIDを取得できませんでした。ゲームの実行中にアプレットモードでNYF-AIO-Switch-Updaterを起動してみてください",
     "exclude_titles": "タイトルを除外する",
     "exclude_titles_desc": "このメニューでチートのアップデートをオフにする事ができます",
     "exclude_titles_save": "選択を保存して戻る",
@@ -39,7 +39,7 @@
     "bid_tid_info": "これらのチートは、既存のチートファイルの最後に追加されます。",
     "dl_cheatcodes": "チートコードをダウンロード",
     "dl_successful": "次のチートコードを正常にダウンロードしました:\n{}",
-    "applet_mode_not_supported": "メモリの制約により、アプレットモードでは、現在プレイしているゲームのチートコードのみをフェッチできます。所有しているゲームのチートコードをダウンロードするには、タイトルリダイレクトを通じてAIO-Switch-Updaterを起動してください。",
+    "applet_mode_not_supported": "メモリの制約により、アプレットモードでは、現在プレイしているゲームのチートコードのみをフェッチできます。所有しているゲームのチートコードをダウンロードするには、タイトルリダイレクトを通じてNYF-AIO-Switch-Updaterを起動してください。",
     "cheatfile_label": "これがファイルにリストされているチートコードです {}",
     "not_found": "このゲームに適切なチートコードが見つかりませんでした",
     "show_existing": "既存の物を表示",
@@ -69,7 +69,7 @@
     "cancel": "キャンセル",
     "off": "無効",
     "selected": "選択済み",
-    "applet_mode_not_supported": "この機能はアプレットモードの状態で使用できません。アクセスするには、タイトルリダイレクトを介してAIO-Switch-Updaterを起動してください。",
+    "applet_mode_not_supported": "この機能はアプレットモードの状態で使用できません。アクセスするには、タイトルリダイレクトを介してNYF-AIO-Switch-Updaterを起動してください。",
     "nothing_to_see": "特に見るべきものはありません!"
   },
   "changelog": {
@@ -183,7 +183,7 @@
     "cant_fetch_deepsea": "パッケージをフェッチできませんでした。これが続く場合は、GitHubの問題を開きます。",
     "build_your_deepsea": "パッケージを選択して、独自のカスタムDeepSeaパッケージを作成します",
     "getting_ams": "Atmosphèreを取得中です",
-    "custom_packs_label": "\u25c6 {} ファイルにリストされているパックは次の通りです。 それらはAIO-Switch-Updaterによって承認されていない事に注意をしてください。そのため、それらのソースを信頼している事を確認してください。"
+    "custom_packs_label": "\u25c6 {} ファイルにリストされているパックは次の通りです。 それらはNYF-AIO-Switch-Updaterによって承認されていない事に注意をしてください。そのため、それらのソースを信頼している事を確認してください。"
   },
   "firmware": {
     "launch_daybreak": "ダウンロードをしたsysupdateをインストールするためにDaybreakを起動しますか?"
