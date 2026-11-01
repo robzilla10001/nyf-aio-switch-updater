@@ -44,7 +44,7 @@ MainFrame::MainFrame() : TabFrame()
         this->addTab(Lang::t("main.about"), new AboutTab());
 
     if (!util::getBoolValue(hideStatus, "atmosphere"))
-        this->addTab(Lang::t("main.update_ams"), new AmsTab_Regular(nxlinks, erista));
+        this->addTab(Lang::t("main.update_ams"), new AmsTab_Regular(erista));
 
     if (!util::getBoolValue(hideStatus, "cfw"))
         this->addTab(Lang::t("main.update_bootloaders"), new ListDownloadTab(contentType::bootloaders, nxlinks));
@@ -56,7 +56,7 @@ MainFrame::MainFrame() : TabFrame()
         this->addTab(Lang::t("main.download_cheats"), new ListDownloadTab(contentType::cheats));
 
     if (!util::getBoolValue(hideStatus, "custom"))
-        this->addTab(Lang::t("main.custom_downloads"), new AmsTab_Custom(nxlinks, erista));
+        this->addTab(Lang::t("main.custom_downloads"), new AmsTab_Custom(erista));
 
     if (!util::getBoolValue(hideStatus, "tools"))
         this->addTab(Lang::t("main.tools"), new ToolsTab(tag, util::getValueFromKey(nxlinks, "payloads"), erista, hideStatus));

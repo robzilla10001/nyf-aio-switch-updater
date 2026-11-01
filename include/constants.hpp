@@ -18,6 +18,9 @@ constexpr const char CHANGELOG_URL[] = "https://github.com/robzilla10001/nyf-aio
 // {} is the release tag
 constexpr const char APP_URL_FORMAT[] = "https://github.com/robzilla10001/nyf-aio-switch-updater/releases/download/{}/nyf-aio-switch-updater.zip";
 constexpr const char APP_REPO[] = "robzilla10001/nyf-aio-switch-updater";
+constexpr const char AMS_REPO[] = "Atmosphere-NX/Atmosphere";
+constexpr const char BTH_REPO[] = "borntohonk/Atmosphere";
+constexpr const char HEKATE_REPO[] = "CTCaer/hekate";
 constexpr const char APP_FILENAME[] = "/config/nyf-aio-switch-updater/app.zip";
 
 constexpr const char NXLINKS_URL[] = "https://raw.githubusercontent.com/HamletDuFromage/nx-links/master/nx-links.json";
@@ -39,9 +42,6 @@ constexpr const char HEKATE_URL[] = "https://raw.githubusercontent.com/HamletDuF
 
 constexpr const char PAYLOAD_URL[] = "https://raw.githubusercontent.com/HamletDuFromage/nx-links/master/payloads.json";
 
-constexpr const char DEEPSEA_META_JSON[] = "https://builder.teamneptune.net/meta.json";
-constexpr const char DEEPSEA_BUILD_URL[] = "https://builder.teamneptune.net/build/";
-constexpr const char DEEPSEA_PACKAGE_PATH[] = "/config/deepsea/customPackage.json";
 
 constexpr const char CUSTOM_PACKS_PATH[] = "/config/nyf-aio-switch-updater/custom_packs.json";
 

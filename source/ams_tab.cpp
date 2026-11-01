@@ -10,50 +10,65 @@
 #include "download.hpp"
 #include "extract.hpp"
 #include "fs.hpp"
+#include "github.hpp"
+#include "release_browser.hpp"
 #include "utils.hpp"
 #include "worker_page.hpp"
 #include "lang.hpp"
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
-AmsTab::AmsTab(const nlohmann::ordered_json& nxlinks, const bool erista) : brls::List()
+AmsTab::AmsTab(const bool erista) : brls::List()
 {
     this->erista = erista;
-    this->nxlinks = nxlinks;
-    this->hekate = util::getValueFromKey(nxlinks, "hekate");
+
+    // hekate is offered after installing a pack that does not include it
+    github::Release release;
+    if (github::getLatestRelease(HEKATE_REPO, release) == github::Status::Ok) {
+        if (const github::Asset* zip = github::findAsset(release, "{first zip}"))
+            this->hekate[zip->name] = zip->url;
+    }
 }
 
 void AmsTab::RegisterListItemAction(brls::ListItem* listItem) {}
 
+void AmsTab::StartInstall(const std::string& name, const std::string& url, bool offerHekate, bool ams)
+{
+    if (!erista && !std::filesystem::exists(MARIKO_PAYLOAD_PATH)) {
+        brls::Application::crash(Lang::t("errors.mariko_payload_missing"));
+        return;
+    }
+
+    std::string text(Lang::t("common.download") + name + Lang::t("common.from") + url);
+    bool withHekate = offerHekate && !this->hekate.empty();
+    std::string text_hekate, hekate_url;
+    if (withHekate) {
+        auto hekate_link = download::getLinksFromJson(this->hekate);
+        hekate_url = hekate_link[0].second;
+        text_hekate = Lang::t("common.download") + hekate_link[0].first;
+    }
+    CreateStagedFrames(text, url, erista, ams, withHekate, text_hekate, hekate_url);
+}
+
 bool AmsTab::CreateDownloadItems(const nlohmann::ordered_json& cfw_links, bool hekate, bool ams)
 {
-    std::vector<std::pair<std::string, std::string>> links;
-    links = download::getLinksFromJson(cfw_links);
-    if (links.size() && !this->hekate.empty()) {  // non-empty this->hekate indicates internet connection
-        auto hekate_link = download::getLinksFromJson(this->hekate);
-        std::string hekate_url = hekate_link[0].second;
-        std::string text_hekate = Lang::t("common.download") + hekate_link[0].first;
+    std::vector<std::pair<std::string, std::string>> links = download::getLinksFromJson(cfw_links);
+    if (links.empty())
+        return false;
 
-        for (const auto& link : links) {
-            bool pack = link.first.contains("[PACK]");
-            std::string url = link.second;
-            std::string text(Lang::t("common.download") + link.first + Lang::t("common.from") + url);
-            listItem = new brls::ListItem(link.first);
-            listItem->setHeight(LISTITEM_HEIGHT);
-            listItem->getClickEvent()->subscribe([this, text, text_hekate, url, hekate_url, hekate, pack, ams](brls::View* view) {
-                if (!erista && !std::filesystem::exists(MARIKO_PAYLOAD_PATH)) {
-                    brls::Application::crash(Lang::t("errors.mariko_payload_missing"));
-                }
-                else {
-                    CreateStagedFrames(text, url, erista, ams, hekate && !pack, text_hekate, hekate_url);
-                }
-            });
-            this->RegisterListItemAction(listItem);
-            this->addView(listItem);
-        }
-        return true;
+    for (const auto& link : links) {
+        bool pack = link.first.contains("[PACK]");
+        std::string name = link.first;
+        std::string url = link.second;
+        listItem = new brls::ListItem(name);
+        listItem->setHeight(LISTITEM_HEIGHT);
+        listItem->getClickEvent()->subscribe([this, name, url, hekate, pack, ams](brls::View* view) {
+            StartInstall(name, url, hekate && !pack, ams);
+        });
+        this->RegisterListItemAction(listItem);
+        this->addView(listItem);
     }
-    return false;
+    return true;
 }
 
 void AmsTab::CreateStagedFrames(const std::string& text, const std::string& url, bool erista, bool ams, bool hekate, const std::string& text_hekate, const std::string& hekate_url)
@@ -81,7 +96,7 @@ void AmsTab::CreateStagedFrames(const std::string& text, const std::string& url,
     brls::Application::pushView(stagedFrame);
 }
 
-AmsTab_Regular::AmsTab_Regular(const nlohmann::ordered_json& nxlinks, const bool erista) : AmsTab(nxlinks, erista)
+AmsTab_Regular::AmsTab_Regular(const bool erista) : AmsTab(erista)
 {
     this->CreateLists();
 }
@@ -100,130 +115,47 @@ bool AmsTab_Regular::CreateDownloadItems(const nlohmann::ordered_json& cfw_links
     return false;
 }
 
+nlohmann::ordered_json AmsTab_Regular::GetLatestAtmosphere()
+{
+    nlohmann::ordered_json links = nlohmann::ordered_json::object();
+    github::Release release;
+    if (github::getLatestRelease(AMS_REPO, release) == github::Status::Ok) {
+        if (const github::Asset* zip = github::findAsset(release, "{first zip}"))
+            links[zip->name] = zip->url;
+    }
+    return links;
+}
+
+void AmsTab_Regular::ShowBornToHonkReleases()
+{
+    release_browser::open(
+        Lang::t("ams_update.bth_fork_title"), BTH_REPO, 10, {"zip"},
+        [this](const github::Release& release, const github::Asset& asset) {
+            this->StartInstall(asset.name, asset.url, true);
+        },
+        "romfs:/bth_icon.png", github::releasesPageUrl(BTH_REPO));
+}
+
 void AmsTab_Regular::CreateLists()
 {
     this->type = contentType::ams_cfw;
-    auto cfws = util::getValueFromKey(this->nxlinks, "cfws");
 
     this->addView(new brls::Label(brls::LabelStyle::DESCRIPTION, Lang::t("main.ams_text") + "\n" + Lang::t("ams_update.current_ams") + CurrentCfw::getAmsInfo() + (erista ? "\n" + Lang::t("ams_update.erista_rev") : "\n" + Lang::t("ams_update.mariko_rev")), true));
-    CreateDownloadItems(util::getValueFromKey(cfws, "Atmosphere"));
+    CreateDownloadItems(GetLatestAtmosphere());
 
     this->addView(new brls::Label(
         brls::LabelStyle::DESCRIPTION,
-        Lang::t("ams_update.deepsea_label"),
+        Lang::t("ams_update.bth_label"),
         true));
-    listItem = new brls::ListItem(Lang::t("ams_update.get_custom_deepsea"));
+    listItem = new brls::ListItem(Lang::t("ams_update.download_bth_fork"));
     listItem->setHeight(LISTITEM_HEIGHT);
     listItem->getClickEvent()->subscribe([this](brls::View* view) {
-        nlohmann::ordered_json modules;
-        download::getRequest(DEEPSEA_META_JSON, modules);
-        this->ShowCustomDeepseaBuilder(modules);
+        this->ShowBornToHonkReleases();
     });
     this->addView(listItem);
-    CreateDownloadItems(util::getValueFromKey(cfws, "DeepSea"), false);
 }
 
-std::string AmsTab_Regular::GetRepoName(const std::string& repo)
-{
-    return repo.substr(repo.find("/") + 1, repo.length());
-}
-
-std::set<std::string> AmsTab_Regular::GetLastDownloadedModules(const std::string& json_path)
-{
-    nlohmann::ordered_json package = fs::parseJsonFile(json_path);
-    std::set<std::string> res;
-    if (package.find("modules") != package.end()) {
-        for (const auto& module : package.at("modules")) {
-            res.insert(module.get<std::string>());
-        }
-    }
-    return res;
-}
-
-nlohmann::ordered_json AmsTab_Regular::SortDeepseaModules(const nlohmann::ordered_json& modules)
-{
-    nlohmann::ordered_json sorted_modules = nlohmann::ordered_json::object();
-    if (modules.find("modules") != modules.end()) {
-        for (const auto& module : modules.at("modules").items()) {
-            sorted_modules[std::string(module.value().at("category"))][module.key()] = module.value();
-        }
-    }
-    return sorted_modules;
-}
-
-void AmsTab_Regular::ShowCustomDeepseaBuilder(nlohmann::ordered_json& modules)
-{
-    modules = SortDeepseaModules(modules);
-    std::map<std::string, std::string> name_map;
-
-    brls::TabFrame* appView = new brls::TabFrame();
-    appView->setIcon("romfs:/deepsea_icon.png");
-
-    std::vector<brls::List*> lists;
-    std::set<std::string> old_modules = GetLastDownloadedModules(DEEPSEA_PACKAGE_PATH);
-
-    brls::ToggleListItem* deepseaListItem;
-    for (const auto& category : modules.items()) {
-        brls::List* list = new brls::List();
-
-        for (const auto& module : category.value().items()) {
-            auto module_value = module.value();
-            std::string requirements = "";
-            if (!module_value.at("requires").empty()) {
-                requirements = Lang::t("ams_update.depends_on");
-                for (const auto& r : module.value().at("requires")) {
-                    requirements += " " + r.get<std::string>() + ",";
-                }
-                requirements.pop_back();
-            }
-            if (module_value.at("required")) {
-                deepseaListItem = new UnTogglableListItem(module_value.at("displayName"), 1, requirements, "Required", "o");
-            }
-            else {
-                deepseaListItem = new ::brls::ToggleListItem(module_value.at("displayName"),
-                                                             old_modules.find(module.key()) != old_modules.end() ? 1 : 0,
-                                                             requirements,
-                                                             Lang::t("common.selected"),
-                                                             Lang::t("common.off"));
-            }
-            name_map.insert(std::pair(module_value.at("displayName"), module.key()));
-            deepseaListItem->registerAction(Lang::t("ams_update.show_module_description"), brls::Key::Y, [module_value] {
-                util::showDialogBoxInfo(fmt::format("{}:\n{}", module_value.at("repo"), module_value.at("description")));
-                return true;
-            });
-            list->addView(deepseaListItem);
-        }
-        lists.push_back(list);
-        appView->addTab(category.key(), list);
-    }
-
-    appView->registerAction(Lang::t("ams_update.download_deepsea_package"), brls::Key::X, [this, lists, name_map] {
-        std::set<std::string> desired_modules;
-        for (const auto& list : lists) {
-            for (size_t i = 0; i < list->getViewsCount(); i++) {
-                if (brls::ToggleListItem* item = dynamic_cast<brls::ToggleListItem*>(list->getChild(i))) {
-                    if (item->getToggleState()) {
-                        desired_modules.insert(name_map.at(item->getLabel()));
-                    }
-                }
-            }
-        }
-
-        std::string request_url = DEEPSEA_BUILD_URL;
-        for (const auto& e : desired_modules)
-            request_url += e + ";";
-
-        this->CreateStagedFrames(Lang::t("common.download") + "Custom DeepSea package" + Lang::t("common.from") + request_url,
-                                 request_url,
-                                 this->erista);
-        return true;
-    });
-    appView->registerAction("", brls::Key::PLUS, [this] { return true; });
-
-    brls::PopupFrame::open(Lang::t("ams_update.deepsea_builder"), appView, modules.empty() ? Lang::t("ams_update.cant_fetch_deepsea") : Lang::t("ams_update.build_your_deepsea"), "");
-}
-
-AmsTab_Custom::AmsTab_Custom(const nlohmann::ordered_json& nxlinks, const bool erista) : AmsTab(nxlinks, erista)
+AmsTab_Custom::AmsTab_Custom(const bool erista) : AmsTab(erista)
 {
     this->custom_packs = fs::parseJsonFile(CUSTOM_PACKS_PATH);
     this->CreateLists();
@@ -282,9 +214,4 @@ void AmsTab_Custom::RegisterListItemAction(brls::ListItem* listItem)
         util::restartApp();
         return true;
     });
-}
-
-bool UnTogglableListItem::onClick()
-{
-    return true;
 }

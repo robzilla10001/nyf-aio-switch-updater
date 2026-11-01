@@ -2,7 +2,6 @@
 
 #include <borealis.hpp>
 #include <json.hpp>
-#include <set>
 
 #include "constants.hpp"
 
@@ -11,16 +10,17 @@ class AmsTab : public brls::List
 protected:
     brls::ListItem* listItem;
     bool erista;
-    nlohmann::ordered_json nxlinks;
-    nlohmann::ordered_json hekate;
+    nlohmann::ordered_json hekate;  // {file name: url} of the latest hekate release, empty if unavailable
     contentType type;
     void CreateStagedFrames(const std::string& text, const std::string& url, bool erista, bool ams = true, bool hekate = false, const std::string& text_hekate = "", const std::string& hekate_url = "");
+    // Confirm, download, extract (and optionally offer hekate) for one archive
+    void StartInstall(const std::string& name, const std::string& url, bool offerHekate, bool ams = true);
     bool CreateDownloadItems(const nlohmann::ordered_json& cfw_links, bool hekate = true, bool ams = true);
     void CreateNotFoundLabel();
     virtual void RegisterListItemAction(brls::ListItem* listItem);
 
 public:
-    AmsTab(const nlohmann::ordered_json& nxlinks, const bool erista = true);
+    AmsTab(const bool erista = true);
 };
 
 class AmsTab_Regular : public AmsTab
@@ -28,13 +28,11 @@ class AmsTab_Regular : public AmsTab
 private:
     void CreateLists();
     bool CreateDownloadItems(const nlohmann::ordered_json& cfw_links, bool hekate = true, bool ams = true);
-    void ShowCustomDeepseaBuilder(nlohmann::ordered_json& modules);
-    std::set<std::string> GetLastDownloadedModules(const std::string& json_path);
-    nlohmann::ordered_json SortDeepseaModules(const nlohmann::ordered_json& modules);
-    std::string GetRepoName(const std::string& repo);
+    nlohmann::ordered_json GetLatestAtmosphere();
+    void ShowBornToHonkReleases();
 
 public:
-    AmsTab_Regular(const nlohmann::ordered_json& nxlinks, const bool erista = true);
+    AmsTab_Regular(const bool erista = true);
 };
 
 class AmsTab_Custom : public AmsTab
@@ -46,12 +44,5 @@ private:
     void AddLinkCreator();
 
 public:
-    AmsTab_Custom(const nlohmann::ordered_json& nxlinks, const bool erista = true);
-};
-
-class UnTogglableListItem : public brls::ToggleListItem
-{
-public:
-    UnTogglableListItem(const std::string& label, bool initialValue, std::string description = "", std::string onValue = "On", std::string offValue = "Off") : ToggleListItem(label, initialValue, description, onValue, offValue) {}
-    virtual bool onClick() override;
+    AmsTab_Custom(const bool erista = true);
 };
