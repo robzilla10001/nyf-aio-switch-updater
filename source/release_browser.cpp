@@ -10,12 +10,45 @@ namespace release_browser {
 
     namespace {
 
-        // A paragraph of release notes. Being focusable is what lets the list scroll through long notes.
-        class NotesParagraph : public brls::Label
+        // A focusable block of text: being focusable is what lets a list scroll through long notes.
+        class FocusableText : public brls::Label
         {
         public:
-            NotesParagraph(const std::string& text) : brls::Label(brls::LabelStyle::SMALL, text, true) {}
+            FocusableText(brls::LabelStyle style, const std::string& text) : brls::Label(style, text, true) {}
             brls::View* getDefaultFocus() override { return this; }
+        };
+
+        // The same text in a larger font in a window of its own, one focusable row per line so
+        // that long paragraphs can still be scrolled.
+        void openZoomed(const std::string& title, const std::string& subtitle, const std::string& text)
+        {
+            brls::AppletFrame* frame = new brls::AppletFrame(true, true);
+            brls::List* list = new brls::List();
+
+            size_t start = 0;
+            while (start <= text.size()) {
+                size_t end = text.find('\n', start);
+                std::string line = text.substr(start, end == std::string::npos ? std::string::npos : end - start);
+                start = end == std::string::npos ? text.size() + 1 : end + 1;
+                if (!line.empty())
+                    list->addView(new FocusableText(brls::LabelStyle::DIALOG, line));
+            }
+
+            frame->setContentView(list);
+            brls::PopupFrame::open(title, frame, subtitle, "");
+        }
+
+        // A paragraph of release notes; A shows it enlarged.
+        class NotesParagraph : public FocusableText
+        {
+        public:
+            NotesParagraph(const std::string& text, const std::string& subtitle) : FocusableText(brls::LabelStyle::SMALL, text)
+            {
+                this->registerAction(Lang::t("github.zoom"), brls::Key::A, [text, subtitle] {
+                    openZoomed(Lang::t("github.release_notes"), subtitle, text);
+                    return true;
+                });
+            }
         };
 
         bool hasExtension(const std::string& name, const std::vector<std::string>& extensions)
@@ -59,7 +92,7 @@ namespace release_browser {
             if (!notes.empty()) {
                 list->addView(new brls::Header(Lang::t("github.release_notes")));
                 for (const auto& paragraph : notes)
-                    list->addView(new NotesParagraph(paragraph));
+                    list->addView(new NotesParagraph(paragraph, heading));
             }
             return list;
         }

@@ -218,6 +218,7 @@
     "prerelease": " (pre-release)",
     "files": "Downloads",
     "release_notes": "Release notes",
+    "zoom": "Zoom",
     "no_files": "\u25c6 This release has no files that can be installed from here.",
     "no_network": "\u25c6 Couldn't reach GitHub. Please check your internet connection and try again.",
     "rate_limited": "\u25c6 GitHub's request limit has been reached. Please try again in a little while.",
