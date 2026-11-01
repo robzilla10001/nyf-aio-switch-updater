@@ -17,7 +17,7 @@ constexpr const char CHANGELOG_URL[] = "https://github.com/robzilla10001/nyf-aio
 
 // {} is the release tag
 constexpr const char APP_URL_FORMAT[] = "https://github.com/robzilla10001/nyf-aio-switch-updater/releases/download/{}/nyf-aio-switch-updater.zip";
-constexpr const char RELEASES_API[] = "https://api.github.com/repos/robzilla10001/nyf-aio-switch-updater/releases";
+constexpr const char APP_REPO[] = "robzilla10001/nyf-aio-switch-updater";
 constexpr const char APP_FILENAME[] = "/config/nyf-aio-switch-updater/app.zip";
 
 constexpr const char NXLINKS_URL[] = "https://raw.githubusercontent.com/HamletDuFromage/nx-links/master/nx-links.json";

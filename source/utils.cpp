@@ -10,6 +10,7 @@
 #include "download.hpp"
 #include "extract.hpp"
 #include "fs.hpp"
+#include "github.hpp"
 #include "main_frame.hpp"
 #include "progress_event.hpp"
 #include "reboot_payload.h"
@@ -247,20 +248,14 @@ namespace util {
         reboot_to_payload(path.c_str());
     }
 
-    std::string getLatestTag(const std::string& releasesUrl)
+    std::string getLatestTag(const std::string& repo)
     {
-        nlohmann::ordered_json releases;
-        download::getRequest(releasesUrl, releases, {"accept: application/vnd.github.v3+json"});
-
-        // an error (no releases yet, rate limit, offline) is an object, not an array
+        std::vector<github::Release> releases;
         std::string latest;
-        if (releases.is_array()) {
+        if (github::getReleases(repo, releases, 30) == github::Status::Ok) {
             for (const auto& release : releases) {
-                if (release.value("draft", false) || !release.contains("tag_name") || !release["tag_name"].is_string())
-                    continue;
-                std::string tag = release["tag_name"];
-                if (latest.empty() || isNewerVersion(tag, latest))
-                    latest = tag;
+                if (latest.empty() || isNewerVersion(release.tag, latest))
+                    latest = release.tag;
             }
         }
         return latest;

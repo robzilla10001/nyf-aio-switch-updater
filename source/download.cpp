@@ -402,7 +402,7 @@ namespace download {
         CURL* curl_handle;
         struct MemoryStruct chunk;
         struct curl_slist* list = NULL;
-        long status_code;
+        long status_code = 0;
 
         chunk.memory = static_cast<char*>(malloc(1)); /* will be grown as needed by the realloc above */
         chunk.size = 0;                               /* no data at this point */
@@ -423,6 +423,10 @@ namespace download {
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback2);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void*)&chunk);
         curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, API_AGENT);
+        curl_easy_setopt(curl_handle, CURLOPT_CONNECTTIMEOUT, 10L);
+        // give up only on a stalled transfer, so large responses on slow links still complete
+        curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1024L);
+        curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, 30L);
 
         curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_perform(curl_handle);

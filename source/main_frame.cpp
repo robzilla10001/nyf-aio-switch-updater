@@ -27,7 +27,7 @@ MainFrame::MainFrame() : TabFrame()
     this->setTitle(AppTitle);
 
     s64 freeStorage;
-    std::string tag = util::getLatestTag(RELEASES_API);
+    std::string tag = util::getLatestTag(APP_REPO);
     bool updateAvailable = util::isNewerVersion(tag, AppVersion);
     this->setFooterText(fmt::format("menus/main/footer_text"_i18n,
                                     updateAvailable ? AppVersion + "menus/main/new_update"_i18n : AppVersion,
