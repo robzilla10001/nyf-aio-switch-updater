@@ -35,7 +35,8 @@ namespace util {
     void showDialogBoxInfo(const std::string& text);
     int showDialogBoxBlocking(const std::string& text, const std::string& opt);
     int showDialogBoxBlocking(const std::string& text, const std::string& opt1, const std::string& opt2);
-    std::string getLatestTag(const std::string& url);
+    // newest non-draft release tag of a GitHub releases API url, or "" if none/unreachable
+    std::string getLatestTag(const std::string& releasesUrl);
     std::string downloadFileToString(const std::string& url);
     std::string getCheatsVersion();
     void saveToFile(const std::string& text, const std::string& path);

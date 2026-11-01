@@ -1,7 +1,9 @@
 #include "tools_tab.hpp"
 
+#include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <thread>
 
 #include "JC_page.hpp"
 #include "PC_page.hpp"
@@ -14,6 +16,7 @@
 #include "net_page.hpp"
 #include "payload_page.hpp"
 #include "utils.hpp"
+#include "version_compare.hpp"
 #include "worker_page.hpp"
 
 namespace i18n = brls::i18n;
@@ -24,23 +27,47 @@ namespace {
     constexpr const char AppVersion[] = APP_VERSION;
 }
 
+void pushAppUpdateFrame(const std::string& tag)
+{
+    std::string url = fmt::format(APP_URL_FORMAT, tag);
+    std::string text("menus/tools/dl_app"_i18n + url);
+    brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
+    stagedFrame->setTitle("menus/common/updating"_i18n);
+    stagedFrame->addStage(
+        new ConfirmPage(stagedFrame, text));
+    stagedFrame->addStage(
+        new WorkerPage(stagedFrame, "menus/common/downloading"_i18n, [url]() { util::downloadArchive(url, contentType::app); }));
+    stagedFrame->addStage(
+        new WorkerPage(stagedFrame, "menus/common/extracting"_i18n, []() { util::extractArchive(contentType::app); }));
+    stagedFrame->addStage(
+        new ConfirmPage_AppUpdate(stagedFrame, "menus/common/all_done"_i18n));
+    brls::Application::pushView(stagedFrame);
+}
+
+void promptAppUpdate(const std::string& tag)
+{
+    // Pushing a view while MainFrame is still being pushed would put the dialog underneath it,
+    // so wait for the main view to be up. Dialogs are already opened from worker threads elsewhere.
+    std::thread([tag]() {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+        brls::Dialog* dialog = new brls::Dialog(fmt::format("menus/main/update_prompt"_i18n, tag, AppVersion));
+        dialog->addButton("menus/common/yes"_i18n, [dialog, tag](brls::View* view) {
+            dialog->close([tag]() { pushAppUpdateFrame(tag); });
+        });
+        dialog->addButton("menus/common/no"_i18n, [dialog](brls::View* view) {
+            dialog->close();
+        });
+        dialog->setCancelable(true);
+        dialog->open();
+    }).detach();
+}
+
 ToolsTab::ToolsTab(const std::string& tag, const nlohmann::ordered_json& payloads, bool erista, const nlohmann::ordered_json& hideStatus) : brls::List()
 {
-    if (!tag.empty() && tag != AppVersion) {
+    if (util::isNewerVersion(tag, AppVersion)) {
         brls::ListItem* updateApp = new brls::ListItem(fmt::format("menus/tools/update_app"_i18n, tag));
-        std::string text("menus/tools/dl_app"_i18n + std::string(APP_URL));
-        updateApp->getClickEvent()->subscribe([text, tag](brls::View* view) {
-            brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-            stagedFrame->setTitle("menus/common/updating"_i18n);
-            stagedFrame->addStage(
-                new ConfirmPage(stagedFrame, text));
-            stagedFrame->addStage(
-                new WorkerPage(stagedFrame, "menus/common/downloading"_i18n, []() { util::downloadArchive(APP_URL, contentType::app); }));
-            stagedFrame->addStage(
-                new WorkerPage(stagedFrame, "menus/common/extracting"_i18n, []() { util::extractArchive(contentType::app); }));
-            stagedFrame->addStage(
-                new ConfirmPage_AppUpdate(stagedFrame, "menus/common/all_done"_i18n));
-            brls::Application::pushView(stagedFrame);
+        updateApp->getClickEvent()->subscribe([tag](brls::View* view) {
+            pushAppUpdateFrame(tag);
         });
         updateApp->setHeight(LISTITEM_HEIGHT);
         this->addView(updateApp);

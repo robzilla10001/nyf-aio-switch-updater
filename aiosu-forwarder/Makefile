@@ -43,7 +43,7 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 APP_TITLE	:=	aio-switch-updater forwarder
-APP_AUTHOR	:=	HamletDuFromage
+APP_AUTHOR	:=	RobZilla10001
 APP_VERSION :=  1.0
 #ROMFS	:=	romfs
 

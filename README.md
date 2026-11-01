@@ -13,7 +13,7 @@ A Nintendo Switch homebrew app to update your CFW and cheat codes, download firm
 Supports all "Switch" models (V1 un-patched, V1 patched, V2, Lite, OLED).
 
 ## How to install
-Copy the `aio-switch-updater/` directory to `/switch/` on your sdcard.
+Copy the `nyf-aio-switch-updater/` directory to `/switch/` on your sdcard.
 
 ## Features
 ### ⬦ Update CFW
@@ -79,17 +79,15 @@ Use [`switch-ex-curl`](https://github.com/eXhumer/switch-ex-curl) instead of `sw
 
 Clone the repository
 ```bash
-$ git clone --recursive https://github.com/robzilla10001/nyf-aio-switch-updater
-$ cd aio-switch-updater
+$ git clone https://github.com/robzilla10001/nyf-aio-switch-updater
+$ cd nyf-aio-switch-updater
 ```
 
-Compile 
+Compile (Borealis and TegraExplorer are included in the repository, and the forwarder is built automatically)
 ```bash
-$ cd aiosu-forwarder
-$ make
-$ cd ..
 $ make
 ```
+The build products are placed in `output/`. `./pack_release.sh` zips them up as `output/nyf-aio-switch-updater.zip`.
 
 </details>
 

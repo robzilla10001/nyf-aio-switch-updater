@@ -10,6 +10,7 @@
 #include "list_download_tab.hpp"
 #include "tools_tab.hpp"
 #include "utils.hpp"
+#include "version_compare.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -26,9 +27,10 @@ MainFrame::MainFrame() : TabFrame()
     this->setTitle(AppTitle);
 
     s64 freeStorage;
-    std::string tag = util::getLatestTag(TAGS_INFO);
+    std::string tag = util::getLatestTag(RELEASES_API);
+    bool updateAvailable = util::isNewerVersion(tag, AppVersion);
     this->setFooterText(fmt::format("menus/main/footer_text"_i18n,
-                                    (!tag.empty() && tag != AppVersion) ? AppVersion + "menus/main/new_update"_i18n : AppVersion,
+                                    updateAvailable ? AppVersion + "menus/main/new_update"_i18n : AppVersion,
                                     R_SUCCEEDED(fs::getFreeStorageSD(freeStorage)) ? (float)freeStorage / 0x40000000 : -1));
 
     json hideStatus = fs::parseJsonFile(HIDE_TABS_JSON);
@@ -59,4 +61,7 @@ MainFrame::MainFrame() : TabFrame()
         this->addTab("menus/main/tools"_i18n, new ToolsTab(tag, util::getValueFromKey(nxlinks, "payloads"), erista, hideStatus));
 
     this->registerAction("", brls::Key::B, [this] { return true; });
+
+    if (updateAvailable)
+        promptAppUpdate(tag);
 }

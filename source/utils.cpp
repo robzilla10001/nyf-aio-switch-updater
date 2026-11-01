@@ -15,6 +15,7 @@
 #include "progress_event.hpp"
 #include "reboot_payload.h"
 #include "unistd.h"
+#include "version_compare.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -249,14 +250,23 @@ namespace util {
         reboot_to_payload(path.c_str(), CurrentCfw::running_cfw != CFW::ams);
     }
 
-    std::string getLatestTag(const std::string& url)
+    std::string getLatestTag(const std::string& releasesUrl)
     {
-        nlohmann::ordered_json tag;
-        download::getRequest(url, tag, {"accept: application/vnd.github.v3+json"});
-        if (tag.find("tag_name") != tag.end())
-            return tag["tag_name"];
-        else
-            return "";
+        nlohmann::ordered_json releases;
+        download::getRequest(releasesUrl, releases, {"accept: application/vnd.github.v3+json"});
+
+        // an error (no releases yet, rate limit, offline) is an object, not an array
+        std::string latest;
+        if (releases.is_array()) {
+            for (const auto& release : releases) {
+                if (release.value("draft", false) || !release.contains("tag_name") || !release["tag_name"].is_string())
+                    continue;
+                std::string tag = release["tag_name"];
+                if (latest.empty() || isNewerVersion(tag, latest))
+                    latest = tag;
+            }
+        }
+        return latest;
     }
 
     std::string downloadFileToString(const std::string& url)
