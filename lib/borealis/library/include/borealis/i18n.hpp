@@ -84,7 +84,7 @@ inline namespace literals
      * injecting any parameters
      * Shortcut to i18n::getStr(stringName)
      */
-    std::string operator"" _i18n(const char* str, size_t len);
+    std::string operator""_i18n(const char* str, size_t len);
 } // namespace literals
 
 } // namespace brls::i18n
