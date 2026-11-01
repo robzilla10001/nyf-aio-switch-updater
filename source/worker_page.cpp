@@ -9,6 +9,7 @@
 #include "main_frame.hpp"
 #include "progress_event.hpp"
 #include "utils.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -25,7 +26,7 @@ WorkerPage::WorkerPage(brls::StagedAppletFrame* frame, const std::string& text, 
     this->button = new brls::Button(brls::ButtonStyle::REGULAR);
     this->button->setParent(this);
 
-    this->registerAction("menus/common/cancel"_i18n, brls::Key::B, [this] {
+    this->registerAction(Lang::t("common.cancel"), brls::Key::B, [this] {
         ProgressEvent::instance().setInterupt(true);
         return true;
     });
@@ -44,7 +45,7 @@ std::string formatLabelText(double speed, double fileSizeCurrent, double fileSiz
     int minutes = static_cast<int>((timeRemaining - hours * 3600) / 60);
     int seconds = static_cast<int>(timeRemaining - hours * 3600 - minutes * 60);
 
-    std::string labelText = fmt::format("menus/worker/download_progress"_i18n, fileSizeCurrentMB, fileSizeFinalMB, speedMB);
+    std::string labelText = fmt::format(Lang::t("worker.download_progress"), fileSizeCurrentMB, fileSizeFinalMB, speedMB);
     if (speedMB > 0) {
         std::string eta;
         if (hours > 0)
@@ -53,7 +54,7 @@ std::string formatLabelText(double speed, double fileSizeCurrent, double fileSiz
             eta += fmt::format("{}m ", minutes);
 
         eta += fmt::format("{}s", seconds);
-        labelText += "\n" + fmt::format("menus/worker/time_left"_i18n, eta);
+        labelText += "\n" + fmt::format(Lang::t("worker.time_left"), eta);
     }
 
     return labelText;
@@ -74,7 +75,7 @@ void WorkerPage::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned hei
             appletSetMediaPlaybackState(false);
             if (ProgressEvent::instance().getStatusCode() > 399) {
                 this->draw_page = false;
-                brls::Application::crash(fmt::format("menus/errors/error_message"_i18n, util::getErrorMessage(ProgressEvent::instance().getStatusCode())));
+                brls::Application::crash(fmt::format(Lang::t("errors.error_message"), util::getErrorMessage(ProgressEvent::instance().getStatusCode())));
             }
             if (ProgressEvent::instance().getInterupt()) {
                 brls::Application::pushView(new MainFrame());

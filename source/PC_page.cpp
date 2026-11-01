@@ -4,26 +4,27 @@
 #include "confirm_page.hpp"
 #include "constants.hpp"
 #include "worker_page.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
 PCPage::PCPage() : AppletFrame(true, true)
 {
-    this->setTitle("menus/pro_con/title"_i18n);
+    this->setTitle(Lang::t("pro_con.title"));
     list = new brls::List();
-    std::string labelText = fmt::format("{}\n{}", "menus/pro_con/desc"_i18n, "menus/pro_con/warning"_i18n);
+    std::string labelText = fmt::format("{}\n{}", Lang::t("pro_con.desc"), Lang::t("pro_con.warning"));
     label = new brls::Label(brls::LabelStyle::DESCRIPTION, labelText, true);
     list->addView(label);
 
-    backup = new brls::ListItem("menus/joy_con/backup"_i18n);
+    backup = new brls::ListItem(Lang::t("joy_con.backup"));
     backup->getClickEvent()->subscribe([](brls::View* view) {
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-        stagedFrame->setTitle("menus/pro_con/label"_i18n);
+        stagedFrame->setTitle(Lang::t("pro_con.label"));
         stagedFrame->addStage(
-            new WorkerPage(stagedFrame, "menus/pro_con/backing_up"_i18n,
+            new WorkerPage(stagedFrame, Lang::t("pro_con.backing_up"),
                            []() { PC::backupPCColor(PC_COLOR_PATH); }));
         stagedFrame->addStage(
-            new ConfirmPage_Done(stagedFrame, "menus/common/all_done"_i18n));
+            new ConfirmPage_Done(stagedFrame, Lang::t("common.all_done")));
         brls::Application::pushView(stagedFrame);
     });
     list->addView(backup);
@@ -36,12 +37,12 @@ PCPage::PCPage() : AppletFrame(true, true)
         listItem = new brls::ListItem(profile.first);
         listItem->getClickEvent()->subscribe([value](brls::View* view) {
             brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-            stagedFrame->setTitle("menus/pro_con/label"_i18n);
+            stagedFrame->setTitle(Lang::t("pro_con.label"));
             stagedFrame->addStage(
-                new WorkerPage(stagedFrame, "menus/pro_con/changing"_i18n,
+                new WorkerPage(stagedFrame, Lang::t("pro_con.changing"),
                                [value]() { PC::changePCColor(value); }));
             stagedFrame->addStage(
-                new ConfirmPage_Done(stagedFrame, "menus/pro_con/all_done"_i18n));
+                new ConfirmPage_Done(stagedFrame, Lang::t("pro_con.all_done")));
             brls::Application::pushView(stagedFrame);
         });
         list->addView(listItem);

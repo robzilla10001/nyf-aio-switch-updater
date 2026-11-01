@@ -7,6 +7,7 @@
 #include "fs.hpp"
 #include "main_frame.hpp"
 #include "utils.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -14,7 +15,7 @@ WarningPage::WarningPage(const std::string& text)
 {
     fs::createTree(CONFIG_PATH);
     std::ofstream hiddenFile(HIDDEN_AIO_FILE);
-    this->button = (new brls::Button(brls::ButtonStyle::PRIMARY))->setLabel("menus/common/continue"_i18n);
+    this->button = (new brls::Button(brls::ButtonStyle::PRIMARY))->setLabel(Lang::t("common.continue"));
     this->button->setParent(this);
     this->button->getClickEvent()->subscribe([this](View* view) {
         brls::Application::pushView(new MainFrame());
@@ -32,7 +33,7 @@ void WarningPage::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
 {
     auto end = std::chrono::high_resolution_clock::now();
     auto missing = std::max(1l - std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 0l);
-    auto text = std::string("menus/common/continue"_i18n);
+    auto text = std::string(Lang::t("common.continue"));
     if (missing > 0) {
         this->button->setLabel(text + " (" + std::to_string(missing) + ")");
         this->button->setState(brls::ButtonState::DISABLED);

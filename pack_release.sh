@@ -8,4 +8,5 @@ cp nyf-aio-switch-updater.elf release-nyf-aio-switch-updater.elf
 rm -rf switch/nyf-aio-switch-updater/
 mkdir -p switch/nyf-aio-switch-updater/
 cp nyf-aio-switch-updater.nro switch/nyf-aio-switch-updater/
+cp -r ../nyf-aio-switch-updater/lang switch/nyf-aio-switch-updater/
 zip -FSr nyf-aio-switch-updater.zip switch/

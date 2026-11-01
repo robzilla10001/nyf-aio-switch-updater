@@ -1,4 +1,10 @@
 {
+  "meta": {
+    "language": "English",
+    "author": "RobZilla10001",
+    "version": "1",
+    "notes": "This is the canonical language file: the app falls back to it for any key a translation is missing, and an en.json in /switch/nyf-aio-switch-updater/lang/ overrides the copy built into the app. To add a language, copy this file, rename it to its language code (e.g. es.json), translate the values and update 'language' and 'author' in this block. Do not rename or remove keys. {} and {0}, {1} ... are placeholders the app fills in (numbers, names, paths); keep them, and use the {0}/{1} forms if the translation needs them in a different order. Some strings contain \\n line breaks and \\u25c6 bullets; keep those as well."
+  },
   "about": {
     "title": "All-in-One Nintendo Switch Updater",
     "copyright": "AIO-Switch-Updater is licensed under GPL-3.0",

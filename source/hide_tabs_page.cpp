@@ -6,6 +6,7 @@
 #include "constants.hpp"
 #include "fs.hpp"
 #include "utils.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -13,65 +14,65 @@ using json = nlohmann::ordered_json;
 
 HideTabsPage::HideTabsPage() : AppletFrame(true, true)
 {
-    this->setTitle("menus/hide/title"_i18n);
+    this->setTitle(Lang::t("hide.title"));
     list = new brls::List();
     label = new brls::Label(
         brls::LabelStyle::DESCRIPTION,
-        "menus/hide/desc"_i18n,
+        Lang::t("hide.desc"),
         true);
     list->addView(label);
 
     json hideStatus = fs::parseJsonFile(HIDE_TABS_JSON);
 
-    about = new brls::ToggleListItem("menus/main/about"_i18n, util::getBoolValue(hideStatus, "about"));
+    about = new brls::ToggleListItem(Lang::t("main.about"), util::getBoolValue(hideStatus, "about"));
     list->addView(about);
 
-    ams = new brls::ToggleListItem("menus/main/update_ams"_i18n, util::getBoolValue(hideStatus, "atmosphere"));
+    ams = new brls::ToggleListItem(Lang::t("main.update_ams"), util::getBoolValue(hideStatus, "atmosphere"));
     list->addView(ams);
 
-    cfws = new brls::ToggleListItem("menus/main/update_bootloaders"_i18n, util::getBoolValue(hideStatus, "cfw"));
+    cfws = new brls::ToggleListItem(Lang::t("main.update_bootloaders"), util::getBoolValue(hideStatus, "cfw"));
     list->addView(cfws);
 
-    fws = new brls::ToggleListItem("menus/main/download_firmware"_i18n, util::getBoolValue(hideStatus, "firmwares"));
+    fws = new brls::ToggleListItem(Lang::t("main.download_firmware"), util::getBoolValue(hideStatus, "firmwares"));
     list->addView(fws);
 
-    cheats = new brls::ToggleListItem("menus/main/download_cheats"_i18n, util::getBoolValue(hideStatus, "cheats"));
+    cheats = new brls::ToggleListItem(Lang::t("main.download_cheats"), util::getBoolValue(hideStatus, "cheats"));
     list->addView(cheats);
 	
-    custom = new brls::ToggleListItem("menus/main/custom_downloads"_i18n, util::getBoolValue(hideStatus, "custom"));
+    custom = new brls::ToggleListItem(Lang::t("main.custom_downloads"), util::getBoolValue(hideStatus, "custom"));
     list->addView(custom);
 
-    outdatedTitles = new brls::ToggleListItem("menus/tools/outdated_titles"_i18n, util::getBoolValue(hideStatus, "outdatedtitles"));
+    outdatedTitles = new brls::ToggleListItem(Lang::t("tools.outdated_titles"), util::getBoolValue(hideStatus, "outdatedtitles"));
     list->addView(outdatedTitles);
 
-    jccolor = new brls::ToggleListItem("menus/tools/joy_cons"_i18n, util::getBoolValue(hideStatus, "jccolor"));
+    jccolor = new brls::ToggleListItem(Lang::t("tools.joy_cons"), util::getBoolValue(hideStatus, "jccolor"));
     list->addView(jccolor);
 
-    pccolor = new brls::ToggleListItem("menus/tools/pro_cons"_i18n, util::getBoolValue(hideStatus, "pccolor"));
+    pccolor = new brls::ToggleListItem(Lang::t("tools.pro_cons"), util::getBoolValue(hideStatus, "pccolor"));
     list->addView(pccolor);
 
-    downloadpayload = new brls::ToggleListItem("menus/tools/dl_payloads"_i18n, util::getBoolValue(hideStatus, "downloadpayload"));
+    downloadpayload = new brls::ToggleListItem(Lang::t("tools.dl_payloads"), util::getBoolValue(hideStatus, "downloadpayload"));
     list->addView(downloadpayload);
 
-    rebootpayload = new brls::ToggleListItem("menus/tools/inject_payloads"_i18n, util::getBoolValue(hideStatus, "rebootpayload"));
+    rebootpayload = new brls::ToggleListItem(Lang::t("tools.inject_payloads"), util::getBoolValue(hideStatus, "rebootpayload"));
     list->addView(rebootpayload);
 
-    netsettings = new brls::ToggleListItem("menus/tools/internet_settings"_i18n, util::getBoolValue(hideStatus, "netsettings"));
+    netsettings = new brls::ToggleListItem(Lang::t("tools.internet_settings"), util::getBoolValue(hideStatus, "netsettings"));
     list->addView(netsettings);
 
-    browser = new brls::ToggleListItem("menus/tools/browser"_i18n, util::getBoolValue(hideStatus, "browser"));
+    browser = new brls::ToggleListItem(Lang::t("tools.browser"), util::getBoolValue(hideStatus, "browser"));
     list->addView(browser);
 
-    move = new brls::ToggleListItem("menus/tools/batch_copy"_i18n, util::getBoolValue(hideStatus, "move"));
+    move = new brls::ToggleListItem(Lang::t("tools.batch_copy"), util::getBoolValue(hideStatus, "move"));
     list->addView(move);
 
-    cleanup = new brls::ToggleListItem("menus/tools/clean_up"_i18n, util::getBoolValue(hideStatus, "cleanup"));
+    cleanup = new brls::ToggleListItem(Lang::t("tools.clean_up"), util::getBoolValue(hideStatus, "cleanup"));
     list->addView(cleanup);
 
-    language = new brls::ToggleListItem("menus/tools/language"_i18n, util::getBoolValue(hideStatus, "language"));
+    language = new brls::ToggleListItem(Lang::t("tools.language"), util::getBoolValue(hideStatus, "language"));
     list->addView(language);
 
-    list->registerAction("menus/cheats/exclude_titles_save"_i18n, brls::Key::B, [this] {
+    list->registerAction(Lang::t("cheats.exclude_titles_save"), brls::Key::B, [this] {
         json updatedStatus = json::object();
         updatedStatus["about"] = about->getToggleState();
         updatedStatus["atmosphere"] = ams->getToggleState();											 

@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "constants.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -96,10 +97,10 @@ namespace fs {
             }
         }
         if (error == "") {
-            error = "menus/common/all_done"_i18n;
+            error = Lang::t("common.all_done");
         }
         else {
-            error = "menus/tools/batch_copy_not_found"_i18n + error;
+            error = Lang::t("tools.batch_copy_not_found") + error;
         }
         return error;
     }

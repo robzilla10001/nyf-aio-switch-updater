@@ -20,6 +20,7 @@
 #include "main_frame.hpp"
 #include "progress_event.hpp"
 #include "utils.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -60,7 +61,7 @@ namespace extract {
             if (R_SUCCEEDED(fs::getFreeStorageSD(freeStorage))) {
                 brls::Logger::info("Uncompressed size of archive {}: {}. Available: {}", archivePath, uncompressedSize, freeStorage);
                 if (uncompressedSize * 1.1 > freeStorage) {
-                    brls::Application::crash("menus/errors/insufficient_storage"_i18n);
+                    brls::Application::crash(Lang::t("errors.insufficient_storage"));
                     std::this_thread::sleep_for(std::chrono::microseconds(2000000));
                     brls::Application::quit();
                 }
@@ -127,7 +128,7 @@ namespace extract {
                         extractEntry(filename, zfile);
                         if (filename.substr(0, 14) == "/hekate_ctcaer") {
                             fs::copyFile(filename, UPDATE_BIN_PATH);
-                            if (util::showDialogBoxBlocking(fmt::format("menus/utils/set_hekate_reboot_payload"_i18n, UPDATE_BIN_PATH, REBOOT_PAYLOAD_PATH), "menus/common/yes"_i18n, "menus/common/no"_i18n) == 0) {
+                            if (util::showDialogBoxBlocking(fmt::format(Lang::t("utils.set_hekate_reboot_payload"), UPDATE_BIN_PATH, REBOOT_PAYLOAD_PATH), Lang::t("common.yes"), Lang::t("common.no")) == 0) {
                                 fs::copyFile(UPDATE_BIN_PATH, REBOOT_PAYLOAD_PATH);
                             }
                         }

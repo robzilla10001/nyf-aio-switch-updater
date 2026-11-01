@@ -98,7 +98,10 @@ constexpr const char DAYBREAK_PATH[] = "/switch/daybreak.nro";
 
 constexpr const char HIDDEN_AIO_FILE[] = "/config/nyf-aio-switch-updater/.nyf-aio-switch-updater";
 
-constexpr const char LOCALISATION_FILE[] = "romfs:/i18n/{}/menus.json";
+constexpr const char LANG_PATH[] = "/switch/nyf-aio-switch-updater/lang";
+constexpr const char LANG_EMBEDDED[] = "romfs:/lang/en.json";
+// where the app update zip is unpacked before the forwarder moves the new nro into place
+constexpr const char UPDATE_LANG_PATH[] = "/config/nyf-aio-switch-updater/switch/nyf-aio-switch-updater/lang";
 
 constexpr const int LISTITEM_HEIGHT = 50;
 

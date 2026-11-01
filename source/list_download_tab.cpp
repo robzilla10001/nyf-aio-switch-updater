@@ -12,6 +12,7 @@
 #include "fs.hpp"
 #include "utils.hpp"
 #include "worker_page.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -25,7 +26,7 @@ ListDownloadTab::ListDownloadTab(const contentType type, const nlohmann::ordered
     if (this->type == contentType::cheats) {
         brls::Label* cheatsLabel = new brls::Label(
             brls::LabelStyle::DESCRIPTION,
-            "menus/cheats/cheats_label"_i18n,
+            Lang::t("cheats.cheats_label"),
             true);
         this->addView(cheatsLabel);
         this->createGbatempItem();
@@ -50,8 +51,8 @@ void ListDownloadTab::createList(contentType type)
 {
     std::vector<std::pair<std::string, std::string>> links;
     if (type == contentType::cheats && this->newCheatsVer != "") {
-        links.push_back(std::make_pair(fmt::format("menus/main/get_cheats"_i18n, this->newCheatsVer), CHEATS_URL_CONTENTS));
-        links.push_back(std::make_pair("menus/main/get_cheats_gfx"_i18n, GFX_CHEATS_URL_CONTENTS));
+        links.push_back(std::make_pair(fmt::format(Lang::t("main.get_cheats"), this->newCheatsVer), CHEATS_URL_CONTENTS));
+        links.push_back(std::make_pair(Lang::t("main.get_cheats_gfx"), GFX_CHEATS_URL_CONTENTS));
     }
     else
         links = download::getLinksFromJson(util::getValueFromKey(this->nxlinks, contentTypeNames[(int)type].data()));
@@ -60,39 +61,39 @@ void ListDownloadTab::createList(contentType type)
         for (const auto& link : links) {
             const std::string title = link.first;
             const std::string url = link.second;
-            const std::string text("menus/common/download"_i18n + link.first + "menus/common/from"_i18n + url);
+            const std::string text(Lang::t("common.download") + link.first + Lang::t("common.from") + url);
             listItem = new brls::ListItem(link.first);
             listItem->setHeight(LISTITEM_HEIGHT);
             listItem->getClickEvent()->subscribe([this, type, text, url, title](brls::View* view) {
                 brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-                stagedFrame->setTitle(fmt::format("menus/main/getting"_i18n, contentTypeNames[(int)type].data()));
+                stagedFrame->setTitle(fmt::format(Lang::t("main.getting"), contentTypeNames[(int)type].data()));
                 stagedFrame->addStage(new ConfirmPage(stagedFrame, text));
                 if (type == contentType::fw) {
                     std::string contentsPath = util::getContentsPath();
                     for (const auto& tid : {"0100000000001000", "0100000000001007", "0100000000001013"}) {
                         if (std::filesystem::exists(contentsPath + tid) && !std::filesystem::is_empty(contentsPath + tid)) {
-                            stagedFrame->addStage(new DialoguePage_confirm(stagedFrame, "menus/main/theme_warning"_i18n));
+                            stagedFrame->addStage(new DialoguePage_confirm(stagedFrame, Lang::t("main.theme_warning")));
                         }
                     }
                 }
                 if (type != contentType::payloads && type != contentType::hekate_ipl) {
                     if (type != contentType::cheats || (this->newCheatsVer != this->currentCheatsVer && this->newCheatsVer != "offline")) {
-                        stagedFrame->addStage(new WorkerPage(stagedFrame, "menus/common/downloading"_i18n, [this, type, url]() { util::downloadArchive(url, type); }));
+                        stagedFrame->addStage(new WorkerPage(stagedFrame, Lang::t("common.downloading"), [this, type, url]() { util::downloadArchive(url, type); }));
                     }
-                    stagedFrame->addStage(new WorkerPage(stagedFrame, "menus/common/extracting"_i18n, [this, type]() { util::extractArchive(type, this->newCheatsVer); }));
+                    stagedFrame->addStage(new WorkerPage(stagedFrame, Lang::t("common.extracting"), [this, type]() { util::extractArchive(type, this->newCheatsVer); }));
                 }
                 else if (type == contentType::payloads) {
                     fs::createTree(BOOTLOADER_PL_PATH);
                     std::string path = std::string(BOOTLOADER_PL_PATH) + title;
-                    stagedFrame->addStage(new WorkerPage(stagedFrame, "menus/common/downloading"_i18n, [url, path]() { download::downloadFile(url, path, OFF); }));
+                    stagedFrame->addStage(new WorkerPage(stagedFrame, Lang::t("common.downloading"), [url, path]() { download::downloadFile(url, path, OFF); }));
                 }
                 else if (type == contentType::hekate_ipl) {
                     fs::createTree(BOOTLOADER_PATH);
                     std::string path = std::string(BOOTLOADER_PATH) + title;
-                    stagedFrame->addStage(new WorkerPage(stagedFrame, "menus/common/downloading"_i18n, [url, path]() { download::downloadFile(url, path, OFF); }));
+                    stagedFrame->addStage(new WorkerPage(stagedFrame, Lang::t("common.downloading"), [url, path]() { download::downloadFile(url, path, OFF); }));
                 }
 
-                std::string doneMsg = "menus/common/all_done"_i18n;
+                std::string doneMsg = Lang::t("common.all_done");
                 if (type == contentType::fw && std::filesystem::exists(DAYBREAK_PATH)) {
                         stagedFrame->addStage(new DialoguePage_fw(stagedFrame, doneMsg));
                 }
@@ -113,7 +114,7 @@ void ListDownloadTab::displayNotFound()
 {
     brls::Label* notFound = new brls::Label(
         brls::LabelStyle::SMALL,
-        "menus/main/links_not_found"_i18n,
+        Lang::t("main.links_not_found"),
         true);
     notFound->setHorizontalAlign(NVG_ALIGN_CENTER);
     this->addView(notFound);
@@ -131,23 +132,23 @@ void ListDownloadTab::setDescription(contentType type)
     switch (type) {
         case contentType::fw: {
             SetSysFirmwareVersion ver;
-            description->setText(fmt::format("{}{}", "menus/main/firmware_text"_i18n, R_SUCCEEDED(setsysGetFirmwareVersion(&ver)) ? ver.display_version : "menus/main/not_found"_i18n));
+            description->setText(fmt::format("{}{}", Lang::t("main.firmware_text"), R_SUCCEEDED(setsysGetFirmwareVersion(&ver)) ? ver.display_version : Lang::t("main.not_found")));
             break;
         }
         case contentType::bootloaders:
             description->setText(
-                "menus/main/bootloaders_text"_i18n);
+                Lang::t("main.bootloaders_text"));
             break;
         case contentType::cheats:
             this->newCheatsVer = util::getCheatsVersion();
             this->currentCheatsVer = util::readFile(CHEATS_VERSION);
-            description->setText("menus/main/cheats_text"_i18n + this->currentCheatsVer);
+            description->setText(Lang::t("main.cheats_text") + this->currentCheatsVer);
             break;
         case contentType::payloads:
-            description->setText(fmt::format("menus/main/payloads_label"_i18n, BOOTLOADER_PL_PATH));
+            description->setText(fmt::format(Lang::t("main.payloads_label"), BOOTLOADER_PL_PATH));
             break;
         case contentType::hekate_ipl:
-            description->setText("menus/main/hekate_ipl_label"_i18n);
+            description->setText(Lang::t("main.hekate_ipl_label"));
             break;
         default:
             break;
@@ -158,7 +159,7 @@ void ListDownloadTab::setDescription(contentType type)
 
 void ListDownloadTab::createCheatSlipItem()
 {
-    brls::ListItem* cheatslipsItem = new brls::ListItem("menus/cheats/get_cheatslips"_i18n);
+    brls::ListItem* cheatslipsItem = new brls::ListItem(Lang::t("cheats.get_cheatslips"));
     cheatslipsItem->setHeight(LISTITEM_HEIGHT);
     cheatslipsItem->getClickEvent()->subscribe([](brls::View* view) {
         if (std::filesystem::exists(TOKEN_PATH)) {
@@ -183,7 +184,7 @@ void ListDownloadTab::createCheatSlipItem()
                 brls::Application::pushView(new AppPage_CheatSlips());
             }
             else {
-                util::showDialogBoxInfo("menus/cheats/cheatslips_wrong_id"_i18n + "\n" + "menus/cheats/kb_error"_i18n);
+                util::showDialogBoxInfo(Lang::t("cheats.cheatslips_wrong_id") + "\n" + Lang::t("cheats.kb_error"));
             }
         }
         return true;
@@ -193,7 +194,7 @@ void ListDownloadTab::createCheatSlipItem()
 
 void ListDownloadTab::createGbatempItem()
 {
-    brls::ListItem* gbatempItem = new brls::ListItem("menus/cheats/get_gbatemp"_i18n);
+    brls::ListItem* gbatempItem = new brls::ListItem(Lang::t("cheats.get_gbatemp"));
     gbatempItem->setHeight(LISTITEM_HEIGHT);
     gbatempItem->getClickEvent()->subscribe([](brls::View* view) {
         brls::Application::pushView(new AppPage_Gbatemp());
@@ -204,7 +205,7 @@ void ListDownloadTab::createGbatempItem()
 
 void ListDownloadTab::createGfxItem()
 {
-    brls::ListItem* gfxItem = new brls::ListItem("menus/cheats/get_gfx"_i18n);
+    brls::ListItem* gfxItem = new brls::ListItem(Lang::t("cheats.get_gfx"));
     gfxItem->setHeight(LISTITEM_HEIGHT);
     gfxItem->getClickEvent()->subscribe([](brls::View* view) {
         brls::Application::pushView(new AppPage_Gfx());

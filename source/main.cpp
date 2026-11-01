@@ -7,12 +7,29 @@
 #include "constants.hpp"
 #include "fs.hpp"
 #include "main_frame.hpp"
+#include "lang.hpp"
+#include "language_page.hpp"
 #include "warning_page.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
 //TimeServiceType __nx_time_service_type = TimeServiceType_System;
+
+namespace {
+
+    // Disclaimer on the very first launch, then the main view (About is its first tab)
+    void showMain()
+    {
+        if (std::filesystem::exists(HIDDEN_AIO_FILE)) {
+            brls::Application::pushView(new MainFrame());
+        }
+        else {
+            brls::Application::pushView(new WarningPage(Lang::t("main.launch_warning")));
+        }
+    }
+
+}  // namespace
 
 int main(int argc, char* argv[])
 {
@@ -22,11 +39,8 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    nlohmann::ordered_json languageFile = fs::parseJsonFile(LANGUAGE_JSON);
-    if (languageFile.find("language") != languageFile.end())
-        i18n::loadTranslations(languageFile["language"]);
-    else
-        i18n::loadTranslations();
+    // Borealis' own strings (button hints) are English only; the app's text goes through Lang
+    i18n::loadTranslations("en-US");
 
         //appletInitializeGamePlayRecording();
 
@@ -46,15 +60,24 @@ int main(int argc, char* argv[])
     romfsInit();
 
     fs::createTree(CONFIG_PATH);
+    fs::createTree(std::string(LANG_PATH) + "/");
+    Lang::init(LANG_PATH, LANG_EMBEDDED);
 
     brls::Logger::setLogLevel(brls::LogLevel::DEBUG);
     brls::Logger::debug("Start");
 
-    if (std::filesystem::exists(HIDDEN_AIO_FILE)) {
-        brls::Application::pushView(new MainFrame());
+    if (language::loadSaved()) {
+        showMain();
     }
     else {
-        brls::Application::pushView(new WarningPage("menus/main/launch_warning"_i18n));
+        // first run (or the settings file is gone): let the user pick a language first
+        brls::AppletFrame* picker = language::createPicker([](const std::string& code) {
+            language::save(code);
+            Lang::load(code);
+            showMain();
+        });
+        picker->registerAction("", brls::Key::B, [] { return true; });
+        brls::Application::pushView(picker);
     }
 
     while (brls::Application::mainLoop())

@@ -13,6 +13,7 @@
 #include "fs.hpp"
 #include "utils.hpp"
 #include "worker_page.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -60,7 +61,7 @@ void AppPage::PopulatePage()
             listItem->setThumbnail(controlData->icon, sizeof(controlData->icon));
             this->AddListItem(name, tid);
         }
-        label = new brls::Label(brls::LabelStyle::SMALL, "menus/common/applet_mode_not_supported"_i18n, true);
+        label = new brls::Label(brls::LabelStyle::SMALL, Lang::t("common.applet_mode_not_supported"), true);
         list->addView(label);
     }
     delete[] records;
@@ -68,7 +69,7 @@ void AppPage::PopulatePage()
     brls::Logger::debug("count {}", list->getViewsCount());
 
     if (!list->getViewsCount()) {
-        list->addView(new brls::Label(brls::LabelStyle::DESCRIPTION, "menus/common/nothing_to_see"_i18n, true));
+        list->addView(new brls::Label(brls::LabelStyle::DESCRIPTION, Lang::t("common.nothing_to_see"), true));
     }
 
     this->setContentView(list);
@@ -76,21 +77,21 @@ void AppPage::PopulatePage()
 
 void AppPage::CreateDownloadAllButton()
 {
-    std::string text("menus/cheats/downloading"_i18n);
+    std::string text(Lang::t("cheats.downloading"));
     std::string url = CHEATS_URL_CONTENTS;
     text += url;
-    download = new brls::ListItem("menus/cheats/dl_latest"_i18n);
+    download = new brls::ListItem(Lang::t("cheats.dl_latest"));
     download->getClickEvent()->subscribe([url, text](brls::View* view) {
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-        stagedFrame->setTitle("menus/cheats/getting_cheats"_i18n);
+        stagedFrame->setTitle(Lang::t("cheats.getting_cheats"));
         stagedFrame->addStage(
             new ConfirmPage(stagedFrame, text));
         stagedFrame->addStage(
-            new WorkerPage(stagedFrame, "menus/common/downloading"_i18n, [url]() { util::downloadArchive(url, contentType::cheats); }));
+            new WorkerPage(stagedFrame, Lang::t("common.downloading"), [url]() { util::downloadArchive(url, contentType::cheats); }));
         stagedFrame->addStage(
-            new WorkerPage(stagedFrame, "menus/common/extracting"_i18n, []() { util::extractArchive(contentType::cheats); }));
+            new WorkerPage(stagedFrame, Lang::t("common.extracting"), []() { util::extractArchive(contentType::cheats); }));
         stagedFrame->addStage(
-            new ConfirmPage_Done(stagedFrame, "menus/common/all_done"_i18n));
+            new ConfirmPage_Done(stagedFrame, Lang::t("common.all_done")));
         brls::Application::pushView(stagedFrame);
     });
     list->addView(download);
@@ -151,7 +152,7 @@ uint64_t AppPage::GetCurrentApplicationId()
 AppPage_CheatSlips::AppPage_CheatSlips() : AppPage()
 {
     this->PopulatePage();
-    this->registerAction("menus/cheats/cheatslips_logout"_i18n, brls::Key::X, [this] {
+    this->registerAction(Lang::t("cheats.cheatslips_logout"), brls::Key::X, [this] {
         std::filesystem::remove(TOKEN_PATH);
         return true;
     });
@@ -159,8 +160,8 @@ AppPage_CheatSlips::AppPage_CheatSlips() : AppPage()
 
 void AppPage_CheatSlips::CreateLabel()
 {
-    this->setTitle("menus/cheats/cheatslips_title"_i18n);
-    label = new brls::Label(brls::LabelStyle::DESCRIPTION, "menus/cheats/cheatslips_select"_i18n, true);
+    this->setTitle(Lang::t("cheats.cheatslips_title"));
+    label = new brls::Label(brls::LabelStyle::DESCRIPTION, Lang::t("cheats.cheatslips_select"), true);
     list->addView(label);
 }
 
@@ -178,8 +179,8 @@ AppPage_Gbatemp::AppPage_Gbatemp() : AppPage()
 
 void AppPage_Gbatemp::CreateLabel()
 {
-    this->setTitle("menus/cheats/gbatemp_title"_i18n);
-    label = new brls::Label(brls::LabelStyle::DESCRIPTION, "menus/cheats/cheatslips_select"_i18n, true);
+    this->setTitle(Lang::t("cheats.gbatemp_title"));
+    label = new brls::Label(brls::LabelStyle::DESCRIPTION, Lang::t("cheats.cheatslips_select"), true);
     list->addView(label);
 }
 
@@ -196,8 +197,8 @@ AppPage_Gfx::AppPage_Gfx() : AppPage()
 
 void AppPage_Gfx::CreateLabel()
 {
-    this->setTitle("menus/cheats/gfx_title"_i18n);
-    label = new brls::Label(brls::LabelStyle::DESCRIPTION, "menus/cheats/cheatslips_select"_i18n, true);
+    this->setTitle(Lang::t("cheats.gfx_title"));
+    label = new brls::Label(brls::LabelStyle::DESCRIPTION, Lang::t("cheats.cheatslips_select"), true);
     list->addView(label);
 }
 
@@ -215,8 +216,8 @@ AppPage_Exclude::AppPage_Exclude() : AppPage()
 
 void AppPage_Exclude::CreateLabel()
 {
-    this->setTitle("menus/cheats/exclude_titles"_i18n);
-    label = new brls::Label(brls::LabelStyle::DESCRIPTION, "menus/cheats/exclude_titles_desc"_i18n, true);
+    this->setTitle(Lang::t("cheats.exclude_titles"));
+    label = new brls::Label(brls::LabelStyle::DESCRIPTION, Lang::t("cheats.exclude_titles_desc"), true);
     list->addView(label);
 }
 
@@ -257,12 +258,12 @@ void AppPage_Exclude::PopulatePage()
         }
     }
     else {
-        label = new brls::Label(brls::LabelStyle::SMALL, "menus/common/applet_mode_not_supported"_i18n, true);
+        label = new brls::Label(brls::LabelStyle::SMALL, Lang::t("common.applet_mode_not_supported"), true);
         list->addView(label);
     }
     delete[] records;
 
-    list->registerAction("menus/cheats/exclude_titles_save"_i18n, brls::Key::B, [this] {
+    list->registerAction(Lang::t("cheats.exclude_titles_save"), brls::Key::B, [this] {
         std::set<std::string> exclude;
         for (const auto& item : items) {
             if (!item.first->getToggleState()) {
@@ -274,7 +275,7 @@ void AppPage_Exclude::PopulatePage()
         return true;
     });
 
-    this->registerAction("menus/cheats/exclude_all"_i18n, brls::Key::X, [this] {
+    this->registerAction(Lang::t("cheats.exclude_all"), brls::Key::X, [this] {
         std::set<std::string> exclude;
         for (const auto& item : items) {
             exclude.insert(item.second);
@@ -284,7 +285,7 @@ void AppPage_Exclude::PopulatePage()
         return true;
     });
 
-    this->registerAction("menus/cheats/exclude_none"_i18n, brls::Key::Y, [this] {
+    this->registerAction(Lang::t("cheats.exclude_none"), brls::Key::Y, [this] {
         extract::writeTitlesToFile({}, CHEATS_EXCLUDE);
         brls::Application::popView();
         return true;
@@ -301,8 +302,8 @@ AppPage_DownloadedCheats::AppPage_DownloadedCheats() : AppPage()
 
 void AppPage_DownloadedCheats::CreateLabel()
 {
-    this->setTitle("menus/cheats/installed"_i18n);
-    label = new brls::Label(brls::LabelStyle::DESCRIPTION, "menus/cheats/label"_i18n, true);
+    this->setTitle(Lang::t("cheats.installed"));
+    label = new brls::Label(brls::LabelStyle::DESCRIPTION, Lang::t("cheats.label"), true);
     list->addView(label);
 }
 
@@ -311,8 +312,8 @@ void AppPage_DownloadedCheats::AddListItem(const std::string& name, u64 tid)
     auto tid_str = util::formatApplicationId(tid);
     if (titles.find(tid_str) != titles.end()) {
         listItem->getClickEvent()->subscribe([tid, name](brls::View* view) { cheats_util::ShowCheatFiles(tid, name); });
-        listItem->registerAction("menus/cheats/delete_cheats"_i18n, brls::Key::Y, [tid_str] {
-            util::showDialogBoxInfo(extract::removeCheatsDirectory(fmt::format("{}{}", util::getContentsPath(), tid_str)) ? "menus/common/all_done"_i18n : fmt::format("menus/cheats/deletion_error"_i18n, tid_str));
+        listItem->registerAction(Lang::t("cheats.delete_cheats"), brls::Key::Y, [tid_str] {
+            util::showDialogBoxInfo(extract::removeCheatsDirectory(fmt::format("{}{}", util::getContentsPath(), tid_str)) ? Lang::t("common.all_done") : fmt::format(Lang::t("cheats.deletion_error"), tid_str));
             return true;
         });
         list->addView(listItem);
@@ -339,7 +340,7 @@ AppPage_OutdatedTitles::AppPage_OutdatedTitles() : AppPage()
 {
     download::getRequest(LOOKUP_TABLE_URL, versions);
     if (versions.empty()) {
-        list->addView(new brls::Label(brls::LabelStyle::DESCRIPTION, "menus/main/links_not_found"_i18n, true));
+        list->addView(new brls::Label(brls::LabelStyle::DESCRIPTION, Lang::t("main.links_not_found"), true));
         this->setContentView(list);
     }
     else {
@@ -359,7 +360,7 @@ void AppPage_OutdatedTitles::AddListItem(const std::string& name, u64 tid)
         }
     }
     /* else {
-        listItem->setSubLabel(fmt::format("{}\t|\t {}", tid_string, "menus/tools/latest_version_not_found"_i18n));
+        listItem->setSubLabel(fmt::format("{}\t|\t {}", tid_string, Lang::t("tools.latest_version_not_found")));
         list->addView(listItem);
     } */
 }

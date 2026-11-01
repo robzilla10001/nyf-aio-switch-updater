@@ -12,6 +12,7 @@
 #include "constants.hpp"
 #include "fs.hpp"
 #include "main_frame.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -19,7 +20,7 @@ using json = nlohmann::ordered_json;
 
 NetPage::NetPage() : AppletFrame(true, true)
 {
-    this->setTitle("menus/net/title"_i18n);
+    this->setTitle(Lang::t("net.title"));
     list = new brls::List();
 
     nifmInitialize(NifmServiceType_User);
@@ -35,7 +36,7 @@ NetPage::NetPage() : AppletFrame(true, true)
         labelText = "Please connect to internet to use this feature.";
         label = new brls::Label(brls::LabelStyle::DESCRIPTION, labelText, true);
         list->addView(label);
-        cancel = new brls::ListItem("menus/common/go_back"_i18n);
+        cancel = new brls::ListItem(Lang::t("common.go_back"));
         cancel->getClickEvent()->subscribe([](brls::View* view) { brls::Application::pushView(new MainFrame()); });
         list->addView(cancel);
     }
@@ -173,8 +174,8 @@ NetPage::NetPage() : AppletFrame(true, true)
                 brls::GenericEvent::Callback callbackNo = [dialog](brls::View* view) {
                     dialog->close();
                 };
-                dialog->addButton("menus/common/confirm"_i18n, callbackOk);
-                dialog->addButton("menus/common/cancel"_i18n, callbackNo);
+                dialog->addButton(Lang::t("common.confirm"), callbackOk);
+                dialog->addButton(Lang::t("common.cancel"), callbackNo);
                 dialog->setCancelable(false);
                 dialog->open();
             });

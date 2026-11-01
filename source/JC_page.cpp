@@ -4,25 +4,26 @@
 #include "confirm_page.hpp"
 #include "constants.hpp"
 #include "worker_page.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
 JCPage::JCPage() : AppletFrame(true, true)
 {
-    this->setTitle("menus/joy_con/title"_i18n);
+    this->setTitle(Lang::t("joy_con.title"));
     list = new brls::List();
-    label = new brls::Label(brls::LabelStyle::DESCRIPTION, fmt::format("menus/joy_con/description"_i18n, JC_COLOR_PATH, COLOR_PICKER_URL), true);
+    label = new brls::Label(brls::LabelStyle::DESCRIPTION, fmt::format(Lang::t("joy_con.description"), JC_COLOR_PATH, COLOR_PICKER_URL), true);
     list->addView(label);
 
-    backup = new brls::ListItem("menus/joy_con/backup"_i18n);
+    backup = new brls::ListItem(Lang::t("joy_con.backup"));
     backup->getClickEvent()->subscribe([](brls::View* view) {
         brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-        stagedFrame->setTitle("menus/joy_con/label"_i18n);
+        stagedFrame->setTitle(Lang::t("joy_con.label"));
         stagedFrame->addStage(
-            new WorkerPage(stagedFrame, "menus/joy_con/backing_up"_i18n,
+            new WorkerPage(stagedFrame, Lang::t("joy_con.backing_up"),
                            []() { JC::backupJCColor(JC_COLOR_PATH); }));
         stagedFrame->addStage(
-            new ConfirmPage_Done(stagedFrame, "menus/common/all_done"_i18n));
+            new ConfirmPage_Done(stagedFrame, Lang::t("common.all_done")));
         brls::Application::pushView(stagedFrame);
     });
     list->addView(backup);
@@ -35,12 +36,12 @@ JCPage::JCPage() : AppletFrame(true, true)
         listItem = new brls::ListItem(profile.first);
         listItem->getClickEvent()->subscribe([value](brls::View* view) {
             brls::StagedAppletFrame* stagedFrame = new brls::StagedAppletFrame();
-            stagedFrame->setTitle("menus/joy_con/label"_i18n);
+            stagedFrame->setTitle(Lang::t("joy_con.label"));
             stagedFrame->addStage(
-                new WorkerPage(stagedFrame, "menus/joy_con/changing"_i18n,
+                new WorkerPage(stagedFrame, Lang::t("joy_con.changing"),
                                [value]() { JC::changeJCColor(value); }));
             stagedFrame->addStage(
-                new ConfirmPage_Done(stagedFrame, "menus/joy_con/all_done"_i18n));
+                new ConfirmPage_Done(stagedFrame, Lang::t("joy_con.all_done")));
             brls::Application::pushView(stagedFrame);
         });
         list->addView(listItem);

@@ -15,6 +15,7 @@
 #include "fs.hpp"
 #include "progress_event.hpp"
 #include "utils.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -345,7 +346,7 @@ namespace download {
 
         fclose(chunk.out);
         if (!can_download) {
-            brls::Application::crash("menus/errors/insufficient_storage"_i18n);
+            brls::Application::crash(Lang::t("errors.insufficient_storage"));
             std::this_thread::sleep_for(std::chrono::microseconds(2000000));
             brls::Application::quit();
             res = {};

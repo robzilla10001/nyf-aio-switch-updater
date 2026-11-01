@@ -16,6 +16,7 @@
 #include "reboot_payload.h"
 #include "unistd.h"
 #include "version_compare.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -77,7 +78,7 @@ namespace util {
         brls::GenericEvent::Callback callback = [dialog](brls::View* view) {
             dialog->close();
         };
-        dialog->addButton("menus/common/ok"_i18n, callback);
+        dialog->addButton(Lang::t("common.ok"), callback);
         dialog->setCancelable(true);
         dialog->open();
     }
@@ -170,23 +171,28 @@ namespace util {
                 fs::createTree(FIRMWARE_PATH);
                 extract::extract(FIRMWARE_FILENAME, FIRMWARE_PATH);
                 break;
-            case contentType::app:
+            case contentType::app: {
                 extract::extract(APP_FILENAME, CONFIG_PATH);
                 fs::copyFile(ROMFS_FORWARDER, FORWARDER_PATH);
+                // the forwarder only moves the new nro into place, so install shipped language files now
+                std::error_code ec;
+                std::filesystem::create_directories(LANG_PATH, ec);
+                std::filesystem::copy(UPDATE_LANG_PATH, LANG_PATH, std::filesystem::copy_options::overwrite_existing, ec);
                 break;
+            }
             case contentType::custom: {
-                int preserveInis = showDialogBoxBlocking("menus/utils/overwrite_inis"_i18n, "menus/common/yes"_i18n, "menus/common/no"_i18n);
+                int preserveInis = showDialogBoxBlocking(Lang::t("utils.overwrite_inis"), Lang::t("common.yes"), Lang::t("common.no"));
                 extract::extract(CUSTOM_FILENAME, ROOT_PATH, preserveInis);
                 break;
             }
             case contentType::bootloaders: {
-                int preserveInis = showDialogBoxBlocking("menus/utils/overwrite_inis"_i18n, "menus/common/yes"_i18n, "menus/common/no"_i18n);
+                int preserveInis = showDialogBoxBlocking(Lang::t("utils.overwrite_inis"), Lang::t("common.yes"), Lang::t("common.no"));
                 extract::extract(BOOTLOADER_FILENAME, ROOT_PATH, preserveInis);
                 break;
             }
             case contentType::ams_cfw: {
-                int preserveInis = showDialogBoxBlocking("menus/utils/overwrite_inis"_i18n, "menus/common/yes"_i18n, "menus/common/no"_i18n);
-                int deleteContents = showDialogBoxBlocking("menus/ams_update/delete_sysmodules_flags"_i18n, "menus/common/no"_i18n, "menus/common/yes"_i18n);
+                int preserveInis = showDialogBoxBlocking(Lang::t("utils.overwrite_inis"), Lang::t("common.yes"), Lang::t("common.no"));
+                int deleteContents = showDialogBoxBlocking(Lang::t("ams_update.delete_sysmodules_flags"), Lang::t("common.no"), Lang::t("common.yes"));
                 if (deleteContents == 1)
                     removeSysmodulesFlags(AMS_CONTENTS);
                 extract::extract(AMS_FILENAME, ROOT_PATH, preserveInis);
@@ -421,7 +427,7 @@ namespace util {
                 return rc;
         }
         else {  // Running under applet
-            showDialogBoxInfo("menus/utils/applet_webbrowser"_i18n);
+            showDialogBoxInfo(Lang::t("utils.applet_webbrowser"));
         }
         return rc;
     }

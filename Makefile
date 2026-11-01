@@ -160,8 +160,8 @@ all: $(BUILD)
 
 $(ROMFS):
 	@[ -d $@ ] || mkdir -p $@
-	@cp -rf $(CURDIR)/$(ROMFS)/i18n/zh-CN/. $(CURDIR)/$(ROMFS)/i18n/zh-Hans/
-	@cp -rf $(CURDIR)/$(ROMFS)/i18n/zh-TW/. $(CURDIR)/$(ROMFS)/i18n/zh-Hant/
+	@mkdir -p $(CURDIR)/$(ROMFS)/lang
+	@cp $(CURDIR)/nyf-aio-switch-updater/lang/en.json $(CURDIR)/$(ROMFS)/lang/en.json
 	@$(MAKE) -C $(CURDIR)/TegraExplorer -f $(CURDIR)/TegraExplorer/Makefile
 	@cp $(CURDIR)/TegraExplorer/output/TegraExplorer.bin $(CURDIR)/$(ROMFS)/aio_rcm.bin
 	@env -u NROFLAGS -u NACPFLAGS -u APP_JSON -u APP_ICON -u TOPDIR -u OUTPUT -u VPATH -u DEPSDIR -u INCLUDE -u LIBPATHS \

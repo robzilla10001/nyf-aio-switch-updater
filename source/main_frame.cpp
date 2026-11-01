@@ -11,6 +11,7 @@
 #include "tools_tab.hpp"
 #include "utils.hpp"
 #include "version_compare.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
@@ -29,8 +30,8 @@ MainFrame::MainFrame() : TabFrame()
     s64 freeStorage;
     std::string tag = util::getLatestTag(APP_REPO);
     bool updateAvailable = util::isNewerVersion(tag, AppVersion);
-    this->setFooterText(fmt::format("menus/main/footer_text"_i18n,
-                                    updateAvailable ? AppVersion + "menus/main/new_update"_i18n : AppVersion,
+    this->setFooterText(fmt::format(Lang::t("main.footer_text"),
+                                    updateAvailable ? AppVersion + Lang::t("main.new_update") : AppVersion,
                                     R_SUCCEEDED(fs::getFreeStorageSD(freeStorage)) ? (float)freeStorage / 0x40000000 : -1));
 
     json hideStatus = fs::parseJsonFile(HIDE_TABS_JSON);
@@ -40,25 +41,25 @@ MainFrame::MainFrame() : TabFrame()
     bool erista = util::isErista();
 
     if (!util::getBoolValue(hideStatus, "about"))
-        this->addTab("menus/main/about"_i18n, new AboutTab());
+        this->addTab(Lang::t("main.about"), new AboutTab());
 
     if (!util::getBoolValue(hideStatus, "atmosphere"))
-        this->addTab("menus/main/update_ams"_i18n, new AmsTab_Regular(nxlinks, erista));
+        this->addTab(Lang::t("main.update_ams"), new AmsTab_Regular(nxlinks, erista));
 
     if (!util::getBoolValue(hideStatus, "cfw"))
-        this->addTab("menus/main/update_bootloaders"_i18n, new ListDownloadTab(contentType::bootloaders, nxlinks));
+        this->addTab(Lang::t("main.update_bootloaders"), new ListDownloadTab(contentType::bootloaders, nxlinks));
 
     if (!util::getBoolValue(hideStatus, "firmwares"))
-        this->addTab("menus/main/download_firmware"_i18n, new ListDownloadTab(contentType::fw, nxlinks));
+        this->addTab(Lang::t("main.download_firmware"), new ListDownloadTab(contentType::fw, nxlinks));
 
     if (!util::getBoolValue(hideStatus, "cheats"))
-        this->addTab("menus/main/download_cheats"_i18n, new ListDownloadTab(contentType::cheats));
+        this->addTab(Lang::t("main.download_cheats"), new ListDownloadTab(contentType::cheats));
 
     if (!util::getBoolValue(hideStatus, "custom"))
-        this->addTab("menus/main/custom_downloads"_i18n, new AmsTab_Custom(nxlinks, erista));
+        this->addTab(Lang::t("main.custom_downloads"), new AmsTab_Custom(nxlinks, erista));
 
     if (!util::getBoolValue(hideStatus, "tools"))
-        this->addTab("menus/main/tools"_i18n, new ToolsTab(tag, util::getValueFromKey(nxlinks, "payloads"), erista, hideStatus));
+        this->addTab(Lang::t("main.tools"), new ToolsTab(tag, util::getValueFromKey(nxlinks, "payloads"), erista, hideStatus));
 
     this->registerAction("", brls::Key::B, [this] { return true; });
 

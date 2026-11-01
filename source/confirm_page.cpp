@@ -7,12 +7,13 @@
 #include "fs.hpp"
 #include "main_frame.hpp"
 #include "utils.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
 ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text)
 {
-    this->button = (new brls::Button(brls::ButtonStyle::REGULAR))->setLabel("menus/common/back"_i18n);
+    this->button = (new brls::Button(brls::ButtonStyle::REGULAR))->setLabel(Lang::t("common.back"));
     this->button->setParent(this);
     this->button->getClickEvent()->subscribe([frame, this](View* view) {
         if (!frame->isLastStage())
@@ -28,7 +29,7 @@ ConfirmPage::ConfirmPage(brls::StagedAppletFrame* frame, const std::string& text
 
 ConfirmPage_Done::ConfirmPage_Done(brls::StagedAppletFrame* frame, const std::string& text) : ConfirmPage(frame, text)
 {
-    this->button->setLabel("menus/common/back"_i18n);
+    this->button->setLabel(Lang::t("common.back"));
     this->done = true;
 }
 
@@ -67,7 +68,7 @@ void ConfirmPage::draw(NVGcontext* vg, int x, int y, unsigned width, unsigned he
     if (!this->done) {
         auto end = std::chrono::high_resolution_clock::now();
         auto missing = std::max(1l - std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 0l);
-        auto text = std::string("menus/common/continue"_i18n);
+        auto text = std::string(Lang::t("common.continue"));
         if (missing > 0) {
             this->button->setLabel(fmt::format("{} ({})", text, missing));
             this->button->setState(brls::ButtonState::DISABLED);

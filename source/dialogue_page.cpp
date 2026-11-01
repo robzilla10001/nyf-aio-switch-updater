@@ -6,15 +6,16 @@
 #include "fs.hpp"
 #include "main_frame.hpp"
 #include "utils.hpp"
+#include "lang.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
 void DialoguePage::CreateView()
 {
-    this->button1 = (new brls::Button(brls::ButtonStyle::REGULAR))->setLabel("menus/common/yes"_i18n);
+    this->button1 = (new brls::Button(brls::ButtonStyle::REGULAR))->setLabel(Lang::t("common.yes"));
     this->button1->setParent(this);
-    this->button2 = (new brls::Button(brls::ButtonStyle::REGULAR))->setLabel("menus/common/no"_i18n);
+    this->button2 = (new brls::Button(brls::ButtonStyle::REGULAR))->setLabel(Lang::t("common.no"));
     this->button2->setParent(this);
 
     this->instantiateButtons();
@@ -103,7 +104,7 @@ void DialoguePage_ams::instantiateButtons()
         brls::Application::popView();
     });
 
-    this->label = new brls::Label(brls::LabelStyle::DIALOG, "menus/ams_update/install_hekate"_i18n + "\n\n" + this->text, true);
+    this->label = new brls::Label(brls::LabelStyle::DIALOG, Lang::t("ams_update.install_hekate") + "\n\n" + this->text, true);
     start = std::chrono::high_resolution_clock::now() + std::chrono::milliseconds(150);
 }
 
@@ -114,7 +115,7 @@ void DialoguePage_ams::draw(NVGcontext* vg, int x, int y, unsigned width, unsign
 
     auto end = std::chrono::high_resolution_clock::now();
     auto missing = std::max(1l - std::chrono::duration_cast<std::chrono::seconds>(end - start).count(), 0l);
-    auto text = std::string("menus/common/no"_i18n);
+    auto text = std::string(Lang::t("common.no"));
     if (missing > 0) {
         this->button2->setLabel(text + " (" + std::to_string(missing) + ")");
         this->button2->setState(brls::ButtonState::DISABLED);
@@ -143,7 +144,7 @@ void DialoguePage_fw::instantiateButtons()
         brls::Application::quit();
     });
 
-    this->label = new brls::Label(brls::LabelStyle::DIALOG, fmt::format("{}\n\n{}", this->text, "menus/firmware/launch_daybreak"_i18n), true);
+    this->label = new brls::Label(brls::LabelStyle::DIALOG, fmt::format("{}\n\n{}", this->text, Lang::t("firmware.launch_daybreak")), true);
 }
 
 void DialoguePage_confirm::instantiateButtons()

@@ -93,7 +93,12 @@ The build products are placed in `output/`. `./pack_release.sh` zips them up as 
 
 ## Contribute
 
-PRs and suggestions are encouraged! ~~If you wish to help with the localization of the app, you can translate the files in `resources/i18n/`. To easily find the non-translated strings and translate them, you may use `localizer.py` (e.g. `python localizer.py -r resources//i18n//en-US//menus.json -w resources//i18n//fr//menus.json`).~~ Language files are going to be exported to make translation a breeze, stay tuned!
+PRs and suggestions are encouraged!
+
+### Languages
+All of the app's text lives in language files, one per language. English (`nyf-aio-switch-updater/lang/en.json`) is built into the app and is the baseline for every other language. Other languages are loaded from `/switch/nyf-aio-switch-updater/lang/` on the sdcard and chosen in `Tools→Choose app language` (on the first launch you'll be asked). A translation does not have to be complete: any missing text is shown in English.
+
+To add a language, copy `en.json`, rename it to its language code (for example `es.json`), translate the values (never the keys) and fill in the `meta` block at the top. Keep placeholders such as `{}` or `{0}` and line breaks (`\n`) intact.
 
 ## Disclaimer
 I do not own, host nor distribute any of the files that can be downloaded with this homebrew tool. At the owner's request, I will immediately remove the ability to download any problematic file.
@@ -104,13 +109,6 @@ To distinguish this project from the parent project, in case the [original autho
 ## Special thanks
 - [HamletDuFromage](https://github.com/HamletDuFromage) for the original AIO Updater. I hope you're not offended by my changes.
 - [natinusala](https://github.com/natinusala) for the Borealis library.
-- [tiansongyu](https://github.com/tiansongyu) for bringing support for multi-language and for his Chinese translation.
-- [yyoossk](https://github.com/yyoossk) for the Japanese locale.
-- [sergiou87](https://github.com/sergiou87) for the Spanish locale.
-- [pedruhb](https://github.com/pedruhb) for the Brazilian locale.
-- [AD2076](https://github.com/AD2076) for the Italian locale.
-- [qazrfv1234](https://github.com/qazrfv1234) for the Traditional Chinese locale.
-- [Nota Inutilis](https://github.com/NotaInutilis/) for the French locale.
 - [Team Neptune](https://github.com/Team-Neptune) whose rcm code HamletDuFromage used (and I then appropriated).
 - [fennectech](https://github.com/fennectech) for helping test the original app and providing suggestions.
 - [GBATemp members](https://gbatemp.net/forums/nintendo-switch.283/) for testing, un-constructive criticism, and helping me to find the strength to question every choice I've ever made in life.
