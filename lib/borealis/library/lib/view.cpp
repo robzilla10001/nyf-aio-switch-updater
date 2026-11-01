@@ -90,7 +90,7 @@ void View::frame(FrameContext* ctx)
         this->drawBackground(ctx->vg, ctx, style);
 
         // Draw highlight background
-        if (this->highlightAlpha > 0.0f && this->isHighlightBackgroundEnabled())
+        if (this->highlightAlpha > 0.0f && this->isHighlightEnabled() && this->isHighlightBackgroundEnabled())
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, true);
 
         // Collapse clipping
@@ -104,7 +104,7 @@ void View::frame(FrameContext* ctx)
         this->draw(ctx->vg, this->x, this->y, this->width, this->height, style, ctx);
 
         // Draw highlight
-        if (this->highlightAlpha > 0.0f)
+        if (this->highlightAlpha > 0.0f && this->isHighlightEnabled())
             this->drawHighlight(ctx->vg, ctx->theme, this->highlightAlpha, style, false);
 
         // Draw click animation

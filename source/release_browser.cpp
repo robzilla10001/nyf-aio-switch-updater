@@ -14,12 +14,18 @@ namespace release_browser {
         class FocusableText : public brls::Label
         {
         public:
-            FocusableText(brls::LabelStyle style, const std::string& text) : brls::Label(style, text, true) {}
+            FocusableText(brls::LabelStyle style, const std::string& text, bool showFocus = true) : brls::Label(style, text, true), showFocus(showFocus) {}
             brls::View* getDefaultFocus() override { return this; }
+
+        protected:
+            bool isHighlightEnabled() override { return showFocus; }
+
+        private:
+            bool showFocus;
         };
 
-        // The same text in a larger font in a window of its own, one focusable row per line so
-        // that long paragraphs can still be scrolled.
+        // The same text in a larger font in a window of its own. Each line takes focus, without a
+        // visible focus box, so that the D-pad scrolls long paragraphs.
         void openZoomed(const std::string& title, const std::string& subtitle, const std::string& text)
         {
             brls::AppletFrame* frame = new brls::AppletFrame(true, true);
@@ -31,7 +37,7 @@ namespace release_browser {
                 std::string line = text.substr(start, end == std::string::npos ? std::string::npos : end - start);
                 start = end == std::string::npos ? text.size() + 1 : end + 1;
                 if (!line.empty())
-                    list->addView(new FocusableText(brls::LabelStyle::DIALOG, line));
+                    list->addView(new FocusableText(brls::LabelStyle::DIALOG, line, false));
             }
 
             frame->setContentView(list);

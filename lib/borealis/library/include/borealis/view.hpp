@@ -153,6 +153,13 @@ class View
         return true;
     }
 
+    // NYF: a focusable view can opt out of the focus box entirely (it still takes focus, so lists
+    // keep scrolling to it, but nothing is drawn around it)
+    virtual bool isHighlightEnabled()
+    {
+        return true;
+    }
+
     // Helper functions to apply this view's alpha to a color
     NVGcolor a(NVGcolor color);
     NVGpaint a(NVGpaint paint);
